@@ -12,6 +12,7 @@ class User(models.Model):
     ADMIN, USER = True, False
     usertypes = ((ADMIN, 'Admin'), (USER, 'User'))
     usertype = models.BooleanField(choices=usertypes)
+    display_pic = models.ImageField()
 
     def __str__(self):
         return self.username
@@ -21,6 +22,7 @@ class Movie(models.Model):
     title = models.CharField()
     isactive = models.BooleanField(default=True)
     duration = models.IntegerField(validators=[MinValueValidator(0)])
+    synopsis = models.TextField()
     G, PG, PG13, R, X = 'G', 'PG', 'PG-13', 'R', 'X'
     restrictions = ((X, 'General Audience'), (PG, 'Parental Guidance Suggested'), (PG13, 'Parents Strongly Cautioned'),
                     (R, 'Restricted '), (X, 'X-Rated'))
@@ -100,3 +102,14 @@ class Actor(models.Model):
 
     def __str__(self):
         return "{}, {}".format(self.lastname, self.firstname)
+
+
+class Watch(models.Model):
+    AMAZON = 'Amazon'
+    GOOGLE = 'Google Play'
+    ITUNES = 'iTunes'
+    NETFLIX = 'Netflix'
+    sites = ((AMAZON, 'Amazon'), (GOOGLE, 'Google Play'), (ITUNES, 'iTunes'), (NETFLIX, 'Netflix'))
+    site = models.CharField(choices=sites)
+    url = models.URLField()
+    movie = models.ForeignKey(Movie)
