@@ -61,8 +61,9 @@ def login(request):
     if request.method == 'POST':
         m = User.objects.get(adminuser=request.POST['username'])
         if m.password == request.POST['password']:
-            request.session['id'] = m.adminid
-            request.session['user'] = m.adminuser
+            request.session['id'] = m.id
+            request.session['user'] = m.username
+            request.session['type'] = m.usertype
             return redirect('/')
         else:
             context['fail'] = True
@@ -75,6 +76,15 @@ def logout(request):
     try:
         del request.session['id']
         del request.session['user']
+        del request.session['type']
     except KeyError:
         pass
     return redirect('/')
+
+
+def review(request):
+    pass
+
+
+def post(request):
+    pass
