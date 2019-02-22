@@ -1,0 +1,780 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <title>
+        Wonder Woman (2017)
+    </title>
+
+</head>
+
+<body style="background-color: rgba(29, 25, 54, 1);">
+        <nav id="nav-bar-normal"
+        class="nav-account-hide navbar navbar-expand-lg navbar-light navigation-bar navigation-bar-normal">
+        <button id="nav-toggle" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="text-white fa fa-bars"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item text-uppercase letter-spacing mr-5"><a href="home.html">home</a></li>
+                <li class="nav-item text-uppercase letter-spacing mr-5 active-tab"><a href="catalog.html">catalog</a>
+                </li>
+            </ul>
+
+            <span class="text-uppercase letter-spacing nav-search-icon text-white">
+                <span id="openSearch" class="fa fa-search"></span>
+            </span>
+            <form class="nav-search text-uppercase letter-spacing mr-5 mt-3">
+                <input type="text" class="form-control" id="search" placeholder="Search">
+            </form>
+            <span class="nav-item dropdown nav-profile-link">
+                <a class="p-0 nav-link nav-profile" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <div class="media details-profile-hover">
+                        <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                            class="align-self-center mr-3 details-profile-img">
+                        <div class="media-body">
+                            <p class="letter-spacing text-uppercase font-weight-bold w-100 align-self-center mt-3">
+                                Patty
+                                Jenkins
+                                <span class="ml-4 fa fa-angle-down"></span>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+                <div class="dropdown-menu nav-account-drop" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="user.html">My Movies</a>
+                    <a class="dropdown-item" href="user_movies.html">My Reviews</a>
+                    <a class="dropdown-item" href="#">Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Log Out</a>
+                </div>
+            </span>
+            <span class="nav-item dropdown nav-login-link">
+                <a class="p-0 nav-link nav-profile" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <p class="letter-spacing text-uppercase font-weight-bold w-100 align-self-center mt-3">
+                        Login
+                        <span class="ml-4 fa fa-angle-down"></span>
+                    </p>
+                </a>
+                <div class="dropdown-menu nav-login-drop" aria-labelledby="navbarDropdown">
+                    <form class="px-4 py-3">
+                        <div class="form-group">
+                            <label for="exampleDropdownFormEmail1">Email address</label>
+                            <input type="email" class="form-control" id="exampleDropdownFormEmail1"
+                                placeholder="email@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleDropdownFormPassword1">Password</label>
+                            <input type="password" class="form-control" id="exampleDropdownFormPassword1"
+                                placeholder="Password">
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="dropdownCheck">
+                            <label class="form-check-label" for="dropdownCheck">
+                                Remember me
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Sign in</button>
+                    </form>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="signup.html">New around here? Sign up</a>
+                </div>
+            </span>
+        </div>
+    </nav>
+
+    <div id="body" class="container-fluid text-white" style="background-color: rgb(29, 25, 54)">
+        <div class="details-background" style="background-image: url('bg.jpg')">
+        </div>
+        <div id="movie-details" class="row details w-100 details-margin">
+            <div class="row w-100">
+                <div class="col scene_element">
+                    <h1 class="text-uppercase font-weight-bolder"> Wonder Woman <a href="editmovie.html">
+                        <span class="fa fa-edit button-inactive ml-2 edit-movie-btn"></span></a>
+                    </h1>
+                </div>
+            </div>
+            <div class="row w-100 mb-4">
+                <div class="col">
+                    <p class="text-uppercase letter-spacing"> action, adventure, fantasy • 2hr 3min • 2017 • <span
+                            class="badge badge-secondary">PG-13</span>
+                    </p>
+                </div>
+            </div>
+            <div class="row w-100 mb-5">
+                <div class="col-lg-2">
+                    <button type="button" class="w-100 mt-5 btn btn-primary text-uppercase p-3 details-buttons"
+                        data-toggle="modal" data-target="#watch-now-modal">watch
+                        now
+                    </button>
+                    <div class="modal fade bd-example-modal-lg" id="watch-now-modal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body p-5 modal-body">
+                                    <h5 class="modal-title text-center" id="exampleModalLabel"> Watch <span
+                                            class="font-weight-bold">
+                                            Wonder Woman (2017) </span></h5>
+                                    <div class="row mt-5">
+                                        <div class="col">
+                                            <button type="button" class="btn btn-outline-light w-100">Amazon</button>
+                                        </div>
+                                        <div class="col">
+
+                                            <button type="button" class="btn btn-outline-light w-100">Goolge
+                                                Play</button>
+                                        </div>
+                                        <div class="col">
+
+                                            <button type="button" class="btn btn-outline-light w-100">iTunes</button>
+                                        </div>
+                                        <div class="col">
+
+                                            <button type="button" class="btn btn-outline-light w-100">Netflix</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-lg-2">
+                    <button type="button"
+                        class="w-100 mt-5 btn btn-secondary text-uppercase p-3 details-buttons">trailer</button>
+                </div>
+            </div>
+            <div class="row w-100">
+                <div class="col-lg-5 mr-5 mt-5">
+                    <p class="text-uppercase letter-spacing"> synopsis </p>
+                    <p class="text-justify"> An Amazon princess (Gal Gadot) finds her idyllic life on an island
+                        occupied only by female warriors
+                        interrupted when a pilot (Chris Pine) crash-lands nearby. After rescuing him, she learns that
+                        World
+                        War I is engulfing the planet, and vows to use her superpowers to restore peace. Directed by
+                        Patty
+                        Jenkins (Monster). </p>
+                </div>
+                <div class="col-lg-5 mt-5">
+                    <p class="text-uppercase letter-spacing"> directed by </p>
+                    <p class="text-uppercase font-weight-bold w-100 mb-5"> Patty Jenkins </p>
+                    <p class="text-uppercase letter-spacing w-100 mb-2"> posted by </p>
+                    
+                    <a href="user.html">
+                    <div class="media details-profile-hover">
+                            <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                                class="align-self-center mr-3 details-profile-img">
+                            <div class="media-body">
+                                <p class="text-uppercase font-weight-bold w-100 align-self-center mt-3"> Patty Jenkins
+                                </p>
+                            </div>
+                    </div>
+                </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row details-content-margin w-100">
+            <div class="row w-100 mb-5">
+                <p class="text-uppercase letter-spacing"> starring </p>
+            </div>
+            <div class="row mb-5">
+                <div class="col details-starring-col">
+                    <div class="row">
+                        <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                            class="details-starring-img">
+                    </div>
+                    <div class="row mt-3 details-starring-text">
+                        <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
+                    </div>
+                    <div class="row mt-0 details-starring-text">
+                        <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
+                    </div>
+                </div>
+                <div class="col details-starring-col">
+                    <div class="row">
+                        <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                            class="details-starring-img">
+                    </div>
+                    <div class="row mt-3 details-starring-text">
+                        <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
+                    </div>
+                    <div class="row mt-0 details-starring-text">
+                        <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
+                    </div>
+                </div>
+                <div class="col details-starring-col">
+                    <div class="row">
+                        <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                            class="details-starring-img">
+                    </div>
+                    <div class="row mt-3 details-starring-text">
+                        <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
+                    </div>
+                    <div class="row mt-0 details-starring-text">
+                        <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
+                    </div>
+                </div>
+                <div class="col details-starring-col">
+                    <div class="row">
+                        <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                            class="details-starring-img">
+                    </div>
+                    <div class="row mt-3 details-starring-text">
+                        <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
+                    </div>
+                    <div class="row mt-0 details-starring-text">
+                        <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
+                    </div>
+                </div>
+                <div class="col details-starring-col">
+                    <div class="row">
+                        <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                            class="details-starring-img">
+                    </div>
+                    <div class="row mt-3 details-starring-text">
+                        <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
+                    </div>
+                    <div class="row mt-0 details-starring-text">
+                        <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
+                    </div>
+                </div>
+                <div class="col details-starring-col">
+                    <div class="row">
+                        <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                            class="details-starring-img">
+                    </div>
+                    <div class="row mt-3 details-starring-text">
+                        <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
+                    </div>
+                    <div class="row mt-0 details-starring-text">
+                        <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
+                    </div>
+                </div>
+                <div class="col details-starring-col">
+                    <div class="row">
+                        <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                            class="details-starring-img">
+                    </div>
+                    <div class="row mt-3 details-starring-text">
+                        <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
+                    </div>
+                    <div class="row mt-0 details-starring-text">
+                        <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row details-content-margin mt-5">
+            <div class="row w-100 mb-4">
+                <p class="text-uppercase letter-spacing"> reviews </p>
+            </div>
+
+            <div class="row w-100 mb-5">
+                <div class="col-lg-6">
+                    <div class="row mb-5 text-uppercase letter-spacing">
+                        Summary
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-1 mr-5">
+                        </div>
+                        <div class="col-lg-9 mt-2">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="col-lg-2 mt-n2 mr-5 ml-n4">
+                                        <p class="font-weight-bolder details-review-rating mt-0"> 4.7 </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 mt-5">
+                                    <div class="row">
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star"></span>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <p class="w-100 text-muted"> 18,204 reviews </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-4 p-0">
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star"></span>
+                                </div>
+                                <div class="col-lg-5 p-0">
+                                    <div class="progress mt-1">
+                                        <div class="progress-bar" role="progressbar" style="width: 70%;"
+                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-4 p-0">
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                </div>
+                                <div class="col-lg-5 p-0">
+                                    <div class="progress mt-1">
+                                        <div class="progress-bar" role="progressbar" style="width: 10%;"
+                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-4 p-0">
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                </div>
+                                <div class="col-lg-5 p-0">
+                                    <div class="progress mt-1">
+                                        <div class="progress-bar" role="progressbar" style="width: 5%;"
+                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-4 p-0">
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                </div>
+                                <div class="col-lg-5 p-0">
+                                    <div class="progress mt-1">
+                                        <div class="progress-bar" role="progressbar" style="width: 5%;"
+                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-4 p-0">
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                </div>
+                                <div class="col-lg-5 p-0">
+                                    <div class="progress mt-1">
+                                        <div class="progress-bar" role="progressbar" style="width: 10%;"
+                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-5 mb-4">
+                                <div class="col-lg-9">
+                                    <p class="text-uppercase w-100 text-center letter-spacing"> write a review </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-9 p-0">
+                                    <form class="w-100">
+                                        <div class="form-group text-center mb-4">
+                                            <h1 id="write-review-star-group">
+                                                <span id="write-review-star1" class="fa fa-star"></span>
+                                                <span id="write-review-star2" class="fa fa-star"></span>
+                                                <span id="write-review-star3" class="fa fa-star"></span>
+                                                <span id="write-review-star4" class="fa fa-star"></span>
+                                                <span id="write-review-star5" class="fa fa-star"></span></h1>
+                                        </div>
+                                        <div class="form-group mb-4">
+                                            <textarea class="form-control" id="exampleFormControlTextarea1"
+                                                rows="7"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row mb-5 text-uppercase letter-spacing">
+                        Top Reviews
+                    </div>
+                    <ul class="list-unstyled mt-3">
+                        <li class="media mb-5">
+                            <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                                class="details-starring-img mr-5">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1"> Claudia Puig </h5>
+                                <div class="row ml-0 mt-2 mb-2">
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                </div>
+                                As befitting the genre, Wonder Woman is heroic and spirited. The fighting sequences are
+                                spectacular, and the story is engrossing, uplifting and fun. There's even a bit of
+                                romance and humor amid all the action. [Full review in Japanese]
+                            </div>
+                        </li>
+                        <li class="media mb-5">
+                            <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                                class="details-starring-img mr-5">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1"> Richard Brody </h5>
+                                <div class="row ml-0 mt-2 mb-2">
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star"></span>
+                                </div>
+                                "Wonder Woman" is a superhero movie, and it fulfills the heroic and mythic demands of
+                                that genre, but it's also an entry in the genre of wisdom literature that shares
+                                hard-won insights and long-pondered paradoxes of the past with a sincere intimacy.
+                            </div>
+                        </li>
+                        <li class="media mb-5">
+                            <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                                class="details-starring-img mr-5">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1"> Claudia Puig </h5>
+                                <div class="row ml-0 mt-2 mb-2">
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
+                                </div>
+                                As befitting the genre, Wonder Woman is heroic and spirited. The fighting sequences are
+                                spectacular, and the story is engrossing, uplifting and fun. There's even a bit of
+                                romance and humor amid all the action. [Full review in Japanese]
+                            </div>
+                        </li>
+                        <li class="media mb-5">
+                            <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                                class="details-starring-img mr-5">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1"> Richard Brody </h5>
+                                <div class="row ml-0 mt-2 mb-2">
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star"></span>
+                                </div>
+                                "Wonder Woman" is a superhero movie, and it fulfills the heroic and mythic demands of
+                                that genre, but it's also an entry in the genre of wisdom literature that shares
+                                hard-won insights and long-pondered paradoxes of the past with a sincere intimacy.
+                            </div>
+                        </li>
+                    </ul>
+
+                    <a href="" class="nav-link" data-toggle="modal" data-target="#details-review-modal">
+                        <p class="text-right"> View all Reviews &gt </p>
+                    </a>
+                    <div class="modal fade bd-example-modal-lg" id="details-review-modal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body p-5 modal-body details-reviews-area">
+                                    <h5 class="modal-title pr-3 mt-3" id="exampleModalLabel"> Reviews for
+                                        <span class="font-weight-bold"> Wonder Woman (2017) </span>
+                                        <span class="reviews-dropdown ">
+                                            <div class="dropdown">
+                                                <select class="btn btn-light ml-3 ">
+                                                    <option value="sort_rating" selected>Highest Rated</option>
+                                                    <option value="sort_new">Newest</option>
+                                                </select>
+                                            </div>
+                                        </span>
+                                    </h5>
+                                    <div class="row w-100 mt-5 pl-4 pr-4 details-reviews-little">
+                                        <ul class="list-unstyled">
+                                            <li class="media mb-4">
+                                                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                                                    class="details-reviews-img mr-5">
+                                                <div class="media-body details-reviews-body">
+                                                    <h5 class="mt-0 mb-1 details-reviews-title"> Claudia Puig </h5>
+                                                    <div class="row ml-0 mt-2 mb-2">
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                    As befitting the genre, Wonder Woman is heroic and spirited. The
+                                                    fighting sequences are
+                                                    spectacular, and the story is engrossing, uplifting and fun.
+                                                    There's even a bit of
+                                                    romance and humor amid all the action. [Full review in Japanese]
+                                                </div>
+                                            </li>
+                                            <li class="media mb-4">
+                                                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                                                    class="details-reviews-img mr-5">
+                                                <div class="media-body details-reviews-body">
+                                                    <h5 class="mt-0 mb-1 details-reviews-title"> Claudia Puig </h5>
+                                                    <div class="row ml-0 mt-2 mb-2">
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                    As befitting the genre, Wonder Woman is heroic and spirited. The
+                                                    fighting sequences are
+                                                    spectacular, and the story is engrossing, uplifting and fun.
+                                                    There's even a bit of
+                                                    romance and humor amid all the action. [Full review in Japanese]
+                                                </div>
+                                            </li>
+                                            <li class="media mb-4">
+                                                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                                                    class="details-reviews-img mr-5">
+                                                <div class="media-body details-reviews-body">
+                                                    <h5 class="mt-0 mb-1 details-reviews-title"> Claudia Puig </h5>
+                                                    <div class="row ml-0 mt-2 mb-2">
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                    As befitting the genre, Wonder Woman is heroic and spirited. The
+                                                    fighting sequences are
+                                                    spectacular, and the story is engrossing, uplifting and fun.
+                                                    There's even a bit of
+                                                    romance and humor amid all the action. [Full review in Japanese]
+                                                </div>
+                                            </li>
+                                            <li class="media mb-4">
+                                                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                                                    class="details-reviews-img mr-5">
+                                                <div class="media-body details-reviews-body">
+                                                    <h5 class="mt-0 mb-1 details-reviews-title"> Claudia Puig </h5>
+                                                    <div class="row ml-0 mt-2 mb-2">
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                    As befitting the genre, Wonder Woman is heroic and spirited. The
+                                                    fighting sequences are
+                                                    spectacular, and the story is engrossing, uplifting and fun.
+                                                    There's even a bit of
+                                                    romance and humor amid all the action. [Full review in Japanese]
+                                                </div>
+                                            </li>
+                                            <li class="media mb-4">
+                                                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                                                    class="details-reviews-img mr-5">
+                                                <div class="media-body details-reviews-body">
+                                                    <h5 class="mt-0 mb-1 details-reviews-title"> Claudia Puig </h5>
+                                                    <div class="row ml-0 mt-2 mb-2">
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star checked"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                    As befitting the genre, Wonder Woman is heroic and spirited. The
+                                                    fighting sequences are
+                                                    spectacular, and the story is engrossing, uplifting and fun.
+                                                    There's even a bit of
+                                                    romance and humor amid all the action. [Full review in Japanese]
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row details-content-margin mt-5 mb-5">
+            <div class="row w-100 mb-4">
+                <p class="text-uppercase letter-spacing mt-5 mb-5"> trending </p>
+            </div>
+            <div id="scrollId" class="scroll-container mb-5">
+                <div class="row">
+                    <div class="col-lg details-related-col">
+
+                        <a href="details.html">
+                            <div class="row">
+                                <span class="details-related-col-badge">3.5 / 5.0 </span>
+                                <img src="poster.jpg" class="details-related-img">
+                            </div>
+                            <div class="row mt-3 details-related-text">
+                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
+                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg details-related-col">
+
+                        <a href="details.html">
+                            <div class="row">
+                                <span class="details-related-col-badge">3.5 / 5.0 </span>
+                                <img src="poster.jpg" class="details-related-img">
+                            </div>
+                            <div class="row mt-3 details-related-text">
+                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
+                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg details-related-col">
+
+                        <a href="details.html">
+                            <div class="row">
+                                <span class="details-related-col-badge">3.5 / 5.0 </span>
+                                <img src="poster.jpg" class="details-related-img">
+                            </div>
+                            <div class="row mt-3 details-related-text">
+                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
+                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg details-related-col">
+                        <a href="details.html">
+                            <div class="row">
+                                <span class="details-related-col-badge">3.5 / 5.0 </span>
+                                <img src="poster.jpg" class="details-related-img">
+                            </div>
+                            <div class="row mt-3 details-related-text">
+                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
+                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg details-related-col">
+                        <a href="details.html">
+                            <div class="row">
+                                <span class="details-related-col-badge">3.5 / 5.0 </span>
+                                <img src="poster.jpg" class="details-related-img">
+                            </div>
+                            <div class="row mt-3 details-related-text">
+                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
+                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg details-related-col">
+                        <a href="details.html">
+                            <div class="row">
+                                <span class="details-related-col-badge">3.5 / 5.0 </span>
+                                <img src="poster.jpg" class="details-related-img">
+                            </div>
+                            <div class="row mt-3 details-related-text">
+                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
+                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg details-related-col">
+                        <a href="details.html">
+                            <div class="row">
+                                <span class="details-related-col-badge">3.5 / 5.0 </span>
+                                <img src="poster.jpg" class="details-related-img">
+                            </div>
+                            <div class="row mt-3 details-related-text">
+                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
+                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="row w-100 footer">
+        <div class="row w-100 mb-5">
+            <div class="col-lg-4">
+                <div class="row">
+                    <p class="text-uppercase"> About Moby Review </p>
+                </div>
+                <div class="row">
+                    <p class="text-uppercase"> Home </p>
+                </div>
+                <div class="row">
+                    <p class="text-uppercase"> Catalog </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="row">
+                    <p class="text-uppercase"> User profile </p>
+                </div>
+
+                <div class="row">
+                    <p class="text-uppercase"> My Movies </p>
+                </div>
+
+                <div class="row">
+                    <p class="text-uppercase"> My Reviews </p>
+                </div>
+                <div class="row">
+                    <p class="text-uppercase"> Add Movie </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <p class="text-uppercase font-weight-bold text-center"> Follow Us </p>
+                <div class="text-center mt-4">
+                    <h1>
+                        <span class="fa fa-facebook-f mr-4"></span>
+                        <span class="fa fa-twitter mr-4"></span>
+                        <span class="fa fa-instagram mr-4"></span>
+                        <span class="fa fa-snapchat mr-4"></span>
+                        <span class="fa fa-youtube"></span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+        <div class="row text-muted mt-5">
+            <p> Copyright (C) Django Framework. All rights reserved. </p>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="scripts.js"></script>
+</body>
+
+</html>
