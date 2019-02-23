@@ -4,13 +4,27 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import *
 from datetime import datetime
 
+# functions here
+
+def getMovieIds(movie_special):
+    return list(Movie.objects.filter(special=movie_special).values_list("id", flat=True))
+
 # Create your views here.
 
 
 def index(request):
     context = {}
-    context['featured'] = Movie.objects.get(special=Movie.FEATURED)
+    context['featured'] = Movie.objects.filter(special=Movie.FEATURED)
     context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
+
+    # trending movie ratings
+    trending_movie_ratings = []
+    for movie_id in getMovieIds(Movie.TRENDING):
+        trending_movie_ratings.append(list(Review.objects.select_related('movie').values_list('rating', flat=True).filter(movie=int(movie_id))))
+    trending_avg_rating_list = []
+    for lst in trending_movie_ratings:
+        trending_avg_rating_list.append(sum(lst) / float(len(lst)))
+    context['trending_movie_list'] = list(zip(context['trending'], trending_avg_rating_list))
     context['new_release'] = Movie.objects.all().order_by('-time_posted')[:5]
     return render(request, 'home.html', context)
 
