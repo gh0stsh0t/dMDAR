@@ -137,7 +137,7 @@
                             <a href="movie/{{ trend_details.id }}">
                                 <div class="row">
                                     <span class="details-related-col-badge"> {{ trend_ratings }} / 5.0 </span>
-                                    <img src="{{ trend_details.poster }}" class="details-related-img">
+                                    <img src="{{ trend_details.poster.url }}" class="details-related-img">
                                 </div>
                                 <div class="row mt-3 details-related-text">
                                     <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ trend_details.title }} <span class="font-weight-light"> ({{ trend_details.release_date.year }}) </span> </p>
@@ -168,8 +168,22 @@
             </div>
             <div id="scrollId2" class="scroll-container mb-5">
                 <div class="row">
-                    <div class="col-lg details-related-col">
+                    {% comment %} NEW RELEASES DYNAMIC TEMPLATE {% endcomment %}
+                    {% for nr_details, nr_ratings in new_released_movie_list %}
+                        <div class="col-lg details-related-col">
+                            <a href="movie/{{ nr_details.id }}">
+                                <div class="row">
+                                    <span class="details-related-col-badge"> {{ nr_ratings }} / 5.0 </span>
+                                    <img src="{{ nr_details.poster.url }}" class="details-related-img">
+                                </div>
+                                <div class="row mt-3 details-related-text">
+                                    <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ nr_details.title }} <span class="font-weight-light"> ({{ nr_details.release_date.year }}) </span> </p>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
 
+                    {% comment %} <div class="col-lg details-related-col">
                         <a href="details.html">
                             <div class="row">
                                 <span class="details-related-col-badge">3.5 / 5.0 </span>
@@ -180,81 +194,7 @@
                                     Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
                             </div>
                         </a>
-                    </div>
-                    <div class="col-lg details-related-col">
-
-                        <a href="details.html">
-                            <div class="row">
-                                <span class="details-related-col-badge">3.5 / 5.0 </span>
-                                <img src="poster.jpg" class="details-related-img">
-                            </div>
-                            <div class="row mt-3 details-related-text">
-                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg details-related-col">
-
-                        <a href="details.html">
-                            <div class="row">
-                                <span class="details-related-col-badge">3.5 / 5.0 </span>
-                                <img src="poster.jpg" class="details-related-img">
-                            </div>
-                            <div class="row mt-3 details-related-text">
-                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg details-related-col">
-                        <a href="details.html">
-                            <div class="row">
-                                <span class="details-related-col-badge">3.5 / 5.0 </span>
-                                <img src="poster.jpg" class="details-related-img">
-                            </div>
-                            <div class="row mt-3 details-related-text">
-                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg details-related-col">
-                        <a href="details.html">
-                            <div class="row">
-                                <span class="details-related-col-badge">3.5 / 5.0 </span>
-                                <img src="poster.jpg" class="details-related-img">
-                            </div>
-                            <div class="row mt-3 details-related-text">
-                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg details-related-col">
-                        <a href="details.html">
-                            <div class="row">
-                                <span class="details-related-col-badge">3.5 / 5.0 </span>
-                                <img src="poster.jpg" class="details-related-img">
-                            </div>
-                            <div class="row mt-3 details-related-text">
-                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg details-related-col">
-                        <a href="details.html">
-                            <div class="row">
-                                <span class="details-related-col-badge">3.5 / 5.0 </span>
-                                <img src="poster.jpg" class="details-related-img">
-                            </div>
-                            <div class="row mt-3 details-related-text">
-                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                    Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                            </div>
-                        </a>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@ from django.db.models import Count, Avg
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import *
 from datetime import datetime
+from operator import itemgetter
 
 # functions here
 
@@ -12,11 +13,12 @@ def getMovieIdsFromSpecial(movie_special):
 # Create your views here.
 
 
-def index(request)
+def index(request):
     context = {}
+    all_movies = Movie.objects.all()
     context['featured'] = Movie.objects.filter(special=Movie.FEATURED)
     context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
-    new_released_movies = Movie.objects.all().order_by('-time_posted').values_list("id", flat=True)[:5]
+    new_released_movies = all_movies.order_by('-time_posted')[:5]
 
     # trending movie ratings
     trending_movie_ratings = []
@@ -39,14 +41,23 @@ def index(request)
 
     # new released movie ratings
     new_released_movie_ratings = []
-    for movie_id in new_released_movies:
-        new_released_movie_ratings.append(list(Review.objects.select_related('movie').values_list('rating', flat=True).filter(movie=int(movie_id))))
+    for movie in new_released_movies:
+        new_released_movie_ratings.append(list(Review.objects.select_related('movie').values_list('rating', flat=True).filter(movie=int(movie.id))))
     new_released_avg_rating_list = []
     for lst in new_released_movie_ratings:
         new_released_avg_rating_list.append(sum(lst) / float(len(lst)))
 
-    context['new_released_movie_list'] = list(zip(new_released_movies), new_released_avg_rating_list)
+    context['new_released_movie_list'] = list(zip(new_released_movies, new_released_avg_rating_list))
 
+    # highest rated movie ratings
+    highest_rated_movie_ratings = []
+    for movie in all_movies:
+        highest_rated_movie_ratings.append(list(Review.objects.select_related('movie').values_list('rating', flat=True).filter(movie=int(movie.id))))
+    highest_rated_avg_ratings_list = []
+    for lst in highest_rated_avg_ratings_list:
+        highest_rated_avg_ratings_list.append(sum(list) / float(len(lst)))
+    
+    context['highest_rated_movie_list'] = sorted(list(zip(all_movies, highest_rated_avg_ratings_list)), key=itemgetter(1), reverse=True)
 
     return render(request, 'home.html', context)
 

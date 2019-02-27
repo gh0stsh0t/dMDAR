@@ -50,7 +50,7 @@ class User(models.Model):
     ADMIN, USER = True, False
     usertypes = ((USER, 'User'), (ADMIN, 'Admin'))
     usertype = models.BooleanField(choices=usertypes, default=usertypes[0][0])
-    display_pic = models.ImageField(null=True, upload_to='mobi/static/mobi/img/display_pic')
+    display_pic = models.ImageField(null=True, upload_to='display_pic/')
 
     def __str__(self):
         return self.username
@@ -74,8 +74,8 @@ class Movie(models.Model):
     special = models.IntegerField(choices=specials, default=specials[0][0])
     trailer = models.URLField(null=True)
     director = models.CharField(max_length=75, null=True)
-    background = models.ImageField(upload_to='mobi/static/mobi/img/bg')
-    poster = models.ImageField(upload_to='mobi/static/mobi/img/poster')
+    background = models.ImageField(upload_to='bg/')
+    poster = models.ImageField(upload_to='poster/')
     time_posted = models.DateTimeField(auto_now_add=True)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
