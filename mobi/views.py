@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.db.models import Count, Avg
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import *
+from .models import Movie, Review, Genre, Actor, Watch, User
+from .forms import UserModelForm, MovieModelForm, ReviewModelForm
 from datetime import datetime
 
 # Create your views here.
@@ -82,9 +83,95 @@ def logout(request):
     return redirect('/')
 
 
-def review(request):
-    pass
+def review(request, movie_id):
+    # This is placeholder code for ajax review code
+    context = {}
+    # For checking if logged in, manual user creation huhu
+    try:
+        user_loggedin = User.objects.get(request.session['id'])
+    except KeyError:
+        return redirect('/movie/'+str(movie_id))
+    movie = Movie.objects.get(id=movie_id)
+    if request.method == 'POST':
+        form = ReviewModelForm(request.POST)
+        if form.is_valid():
+            review = form.save()
+            # Assign foreign keys below
+            review.movie = movie
+            review.reviewer = user_loggedin
+            return redirect('/movie/'+str(movie_id))
+        else:
+            context['form'] = form
+            return render(request, 'review.html', context)
+    else:
+        context['form'] = ReviewModelForm()
+        return render(request, 'review.html', context)
+
+
+def edit_review(request, movie_id, review_id):
+    # This is placeholder code for ajax review code
+    context = {}
+    review = Review.objects.get(id=review_id)
+    # For checking if logged in, manual user creation huhu
+    try:
+        User.objects.get(request.session['id'])
+    except KeyError:
+        return redirect('/movie/'+str(movie_id))
+    if request.method == 'POST':
+        form = ReviewModelForm(request.POST, instance=review)
+        if form.is_valid():
+            review = form.save()
+            return redirect('/movie/'+str(movie_id))
+        else:
+            context['form'] = form
+            return render(request, 'review_edit.html', context)
+    else:
+        context['form'] = ReviewModelForm(instance=review)
+        return render(request, 'review_edit.html', context)
 
 
 def post(request):
-    pass
+    context = {}
+    if request.method == 'POST':
+        form = MovieModelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+        else:
+            context['form'] = form
+            return render(request, 'addmovie.html', context)
+    else:
+        context['form'] = MovieModelForm()
+        return render(request, 'addmovie.html', context)
+
+
+def edit_post(request, movie_id):
+    context = {}
+    movie = Movie.objects.get(id=movie_id)
+    context['movie'] = movie
+    if request.method == 'POST':
+        form = MovieModelForm(request.POST, instance=movie)
+        if form.is_valid():
+            form.save()
+            return redirect('/movie/'+str(movie_id))
+        else:
+            context['form'] = form
+            return render(request, 'editmovie.html', context)
+    else:
+        context['form'] = MovieModelForm(instance=movie)
+        return render(request, 'editmovie.html', context)
+
+
+def signup(request):
+    context = {}
+    if request.method == 'POST':
+        form = UserModelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+        else:
+            context['form'] = form
+            return render(request, 'signup.html', context)
+    else:
+        context['form'] = UserModelForm()
+        return render(request, 'signup.html', context)
