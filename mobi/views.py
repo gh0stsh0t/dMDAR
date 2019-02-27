@@ -10,9 +10,10 @@ from datetime import datetime
 
 def index(request):
     context = {}
-    context['featured'] = Movie.objects.get(special=Movie.FEATURED)
-    context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
-    context['new_release'] = Movie.objects.all().order_by('-time_posted')[:5]
+    m = Movie.objects.annotate(Avg('Review__rating'))
+    context['featured'] = m.objects.get(special=Movie.FEATURED)
+    context['trending'] = m.objects.filter(special=Movie.TRENDING)
+    context['new_release'] = m.objects.all().order_by('-Review__rating__ave')
     return render(request, 'index.html', context)
 
 
@@ -24,6 +25,7 @@ def catalog(request, page=0):
         sorter = request.GET.get('sort', '')
         order = request.GET.get('order', '-')
         search = request.GET.get('search', '')
+        show = int(request.GET.get('show', 0))
         if sorter == 'az':
             sorter = 'title'
         elif sorter == 'release':
@@ -34,7 +36,7 @@ def catalog(request, page=0):
             sorter = 'Review__count'
         else:
             sorter = 'time_posted'
-        context['movies'] = m.filter(title__contains=search).order_by(order+sorter)[0 + offset:10 + offset]
+        context['movies'] = m.filter(title__contains=search).order_by(order+sorter)[0 + offset:show + offset]
 
     else:
         context['movies'] = m.all().order_by('-time_posted')[0 + offset:10 + offset]
@@ -44,6 +46,8 @@ def catalog(request, page=0):
 def details(request, movie_id):
     context = {}
     context['movie'] = Movie.objects.get(id=movie_id)
+    context['reviews'] = context['movie'].review_set.all()
+    context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
     return render(request, 'details.html', context)
 
 
