@@ -6,26 +6,48 @@ from datetime import datetime
 
 # functions here
 
-def getMovieIds(movie_special):
+def getMovieIdsFromSpecial(movie_special):
     return list(Movie.objects.filter(special=movie_special).values_list("id", flat=True))
 
 # Create your views here.
 
 
-def index(request):
+def index(request)
     context = {}
     context['featured'] = Movie.objects.filter(special=Movie.FEATURED)
     context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
+    new_released_movies = Movie.objects.all().order_by('-time_posted').values_list("id", flat=True)[:5]
 
     # trending movie ratings
     trending_movie_ratings = []
-    for movie_id in getMovieIds(Movie.TRENDING):
+    for movie_id in getMovieIdsFromSpecial(Movie.TRENDING):
         trending_movie_ratings.append(list(Review.objects.select_related('movie').values_list('rating', flat=True).filter(movie=int(movie_id))))
     trending_avg_rating_list = []
     for lst in trending_movie_ratings:
         trending_avg_rating_list.append(sum(lst) / float(len(lst)))
     context['trending_movie_list'] = list(zip(context['trending'], trending_avg_rating_list))
-    context['new_release'] = Movie.objects.all().order_by('-time_posted')[:5]
+
+    # featured movie ratings
+    featured_movie_ratings = []
+    for movie_id in getMovieIdsFromSpecial(Movie.FEATURED):
+        featured_movie_ratings.append(list(Review.objects.select_related('movie').values_list('rating', flat=True).filter(movie=int(movie_id))))
+    featured_avg_rating_list = []
+    for lst in featured_movie_ratings:
+        featured_avg_rating_list.append(sum(lst) / float(len(lst)))
+
+    context['featured_movie_list'] = list(zip(context['featured'], featured_avg_rating_list))
+
+    # new released movie ratings
+    new_released_movie_ratings = []
+    for movie_id in new_released_movies:
+        new_released_movie_ratings.append(list(Review.objects.select_related('movie').values_list('rating', flat=True).filter(movie=int(movie_id))))
+    new_released_avg_rating_list = []
+    for lst in new_released_movie_ratings:
+        new_released_avg_rating_list.append(sum(lst) / float(len(lst)))
+
+    context['new_released_movie_list'] = list(zip(new_released_movies), new_released_avg_rating_list)
+
+
     return render(request, 'home.html', context)
 
 
