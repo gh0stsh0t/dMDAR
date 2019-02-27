@@ -15,6 +15,16 @@ def getMovieIdsFromSpecial(movie_special):
 
 def index(request):
     context = {}
+
+    # sending context if user is active or not
+    context['user_logged'] = False
+    try:
+        context['username'] = request.session['user']
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+        context['user_logged'] = True
+    except:
+        pass
+
     all_movies = Movie.objects.all()
     context['featured'] = Movie.objects.filter(special=Movie.FEATURED)
     context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
@@ -106,15 +116,19 @@ def user(request, username):
 def login(request):
     context = {}
     if request.method == 'POST':
-        m = User.objects.get(adminuser=request.POST['username'])
-        if m.password == request.POST['password']:
-            request.session['id'] = m.id
-            request.session['user'] = m.username
-            request.session['type'] = m.usertype
-            return redirect('/')
-        else:
+        try:
+            m = User.objects.get(username=request.POST['username'])
+            if m.password == request.POST['password']:
+                request.session['id'] = m.id
+                request.session['user'] = m.username
+                request.session['type'] = m.usertype
+                return redirect('/')
+            else:
+                context['fail'] = True
+                return render(request, 'home.html', context)
+        except:
             context['fail'] = True
-            return render(request, 'signin.html', context)
+            return render(request, 'home.html', context)
     else:
         return redirect('/')
 
@@ -127,6 +141,10 @@ def logout(request):
     except KeyError:
         pass
     return redirect('/')
+
+def signup(request):
+    context = {}
+    return render(request, 'signup.html', context)
 
 
 def review(request):
