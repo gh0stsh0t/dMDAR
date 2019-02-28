@@ -23,6 +23,30 @@ window.onload = function() {
             }
         });
     }, 2000);
+    const r2 = new JSR(['#range-2-1a', '#range-2-2a'], {
+        sliders: 2,
+        min: 0,
+        max: 5,
+        step: 0.5,
+        values: [0, 5],
+        limit: {
+            show: false
+        },
+        labels: {
+            formatter: (value) => {
+                return value.toString();
+            }
+        }
+    }).setLimit('min', 0).setLimit('max', 5);
+    setTimeout(() => {
+        r2.refresh({
+            min: 0,
+            limit: {
+                min: 0,
+                max: 5
+            }
+        });
+    }, 2000);
 };
 
 

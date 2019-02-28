@@ -12,7 +12,7 @@ def index(request):
     context['featured'] = Movie.objects.get(special=Movie.FEATURED)
     context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
     context['new_release'] = Movie.objects.all().order_by('-time_posted')[:5]
-    return render(request, 'index.html', context)
+    return render(request, 'addmovie.html', context)
 
 
 def catalog(request, page=0):
@@ -43,7 +43,6 @@ def details(request, movie_id):
     context = {}
     context['movie'] = Movie.objects.get(id=movie_id)
     return render(request, 'details.html', context)
-
 
 def user(request, username):
     context = {}
