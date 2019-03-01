@@ -4,17 +4,31 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Movie, Review, Genre, Actor, Watch, User
 from .forms import UserModelForm, MovieModelForm, ReviewModelForm
 from datetime import datetime
+from operator import itemgetter
+from django.db.models import Avg, Func
 
 # Create your views here.
 
 
 def index(request):
     context = {}
-    m = Movie.objects.annotate(Avg('Review__rating'))
-    context['featured'] = m.objects.get(special=Movie.FEATURED)
-    context['trending'] = m.objects.filter(special=Movie.TRENDING)
-    context['new_release'] = m.objects.all().order_by('-Review__rating__ave')
-    return render(request, 'index.html', context)
+
+    # sending context if user is logged in or not
+    context['user_logged'] = False
+    try:
+        context['username'] = request.session['user']
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+        context['user_logged'] = True
+    except:
+        pass
+
+    m = Movie.objects.annotate(Avg('review__rating'))
+    context['featured'] = m.filter(special=Movie.FEATURED)[:7]
+    context['trending'] = m.filter(special=Movie.TRENDING)[:7]
+    context['new_release'] = m.all().order_by('-release_date')[:7]
+    context['highest_rated'] = m.order_by('-review__rating__avg')[:7]
+
+    return render(request, 'home.html', context)
 
 
 def catalog(request, page=0):
@@ -64,15 +78,19 @@ def user(request, username):
 def login(request):
     context = {}
     if request.method == 'POST':
-        m = User.objects.get(adminuser=request.POST['username'])
-        if m.password == request.POST['password']:
-            request.session['id'] = m.id
-            request.session['user'] = m.username
-            request.session['type'] = m.usertype
-            return redirect('/')
-        else:
+        try:
+            m = User.objects.get(username=request.POST['username'])
+            if m.password == request.POST['password']:
+                request.session['id'] = m.id
+                request.session['user'] = m.username
+                request.session['type'] = m.usertype
+                return redirect('/')
+            else:
+                context['fail'] = True
+                return render(request, 'home.html', context)
+        except:
             context['fail'] = True
-            return render(request, 'signin.html', context)
+            return render(request, 'home.html', context)
     else:
         return redirect('/')
 
@@ -85,6 +103,10 @@ def logout(request):
     except KeyError:
         pass
     return redirect('/')
+
+def signup(request):
+    context = {}
+    return render(request, 'signup.html', context)
 
 
 def review(request, movie_id):
