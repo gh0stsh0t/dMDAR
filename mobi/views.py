@@ -35,7 +35,7 @@ def index(request):
 def catalog(request, page=0):
     context = {}
     offset = page * 10
-    m = Movie.objects.annotate(Count('Review'), Avg('Review__rating'))
+    m = Movie.objects.annotate(Count('review'), Avg('review__rating'))
     if request.method == 'GET':
         sorter = request.GET.get('sort', '')
         order = request.GET.get('order', '-')
@@ -46,9 +46,9 @@ def catalog(request, page=0):
         elif sorter == 'release':
             sorter = 'release_date'
         elif sorter == 'score':
-            sorter = 'Review__rating__ave'
+            sorter = 'review__rating__avg'
         elif sorter == 'reviews':
-            sorter = 'Review__count'
+            sorter = 'review__count'
         else:
             sorter = 'time_posted'
         context['movies'] = m.filter(title__contains=search).order_by(order + sorter)[0 + offset:show + offset]
