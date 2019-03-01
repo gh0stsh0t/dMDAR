@@ -64,7 +64,6 @@ def details(request, movie_id):
     context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
     return render(request, 'details.html', context)
 
-
 def user(request, username):
     context = {}
     context['user'] = User.objects.get(username=username)
