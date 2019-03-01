@@ -7,6 +7,7 @@ from datetime import datetime
 from operator import itemgetter
 from django.db.models import Avg, Func
 
+
 # Create your views here.
 
 
@@ -50,7 +51,7 @@ def catalog(request, page=0):
             sorter = 'Review__count'
         else:
             sorter = 'time_posted'
-        context['movies'] = m.filter(title__contains=search).order_by(order+sorter)[0 + offset:show + offset]
+        context['movies'] = m.filter(title__contains=search).order_by(order + sorter)[0 + offset:show + offset]
 
     else:
         context['movies'] = m.all().order_by('-time_posted')[0 + offset:10 + offset]
@@ -63,6 +64,7 @@ def details(request, movie_id):
     context['reviews'] = context['movie'].review_set.all()
     context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
     return render(request, 'details.html', context)
+
 
 def user(request, username):
     context = {}
@@ -103,6 +105,7 @@ def logout(request):
         pass
     return redirect('/')
 
+
 def signup(request):
     context = {}
     return render(request, 'signup.html', context)
@@ -115,7 +118,7 @@ def review(request, movie_id):
     try:
         user_loggedin = User.objects.get(request.session['id'])
     except KeyError:
-        return redirect('/movie/'+str(movie_id))
+        return redirect('/movie/' + str(movie_id))
     movie = Movie.objects.get(id=movie_id)
     if request.method == 'POST':
         form = ReviewModelForm(request.POST)
@@ -124,7 +127,7 @@ def review(request, movie_id):
             # Assign foreign keys below
             review.movie = movie
             review.reviewer = user_loggedin
-            return redirect('/movie/'+str(movie_id))
+            return redirect('/movie/' + str(movie_id))
         else:
             context['form'] = form
             return render(request, 'review.html', context)
@@ -141,12 +144,12 @@ def edit_review(request, movie_id, review_id):
     try:
         User.objects.get(request.session['id'])
     except KeyError:
-        return redirect('/movie/'+str(movie_id))
+        return redirect('/movie/' + str(movie_id))
     if request.method == 'POST':
         form = ReviewModelForm(request.POST, instance=review)
         if form.is_valid():
             review = form.save()
-            return redirect('/movie/'+str(movie_id))
+            return redirect('/movie/' + str(movie_id))
         else:
             context['form'] = form
             return render(request, 'review_edit.html', context)
@@ -178,7 +181,7 @@ def edit_post(request, movie_id):
         form = MovieModelForm(request.POST, instance=movie)
         if form.is_valid():
             form.save()
-            return redirect('/movie/'+str(movie_id))
+            return redirect('/movie/' + str(movie_id))
         else:
             context['form'] = form
             return render(request, 'editmovie.html', context)
