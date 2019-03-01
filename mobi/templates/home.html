@@ -141,15 +141,15 @@
             <div id="scrollId" class="scroll-container mb-5">
                 <div class="row">
                     {% comment %} TRENDING DYNAMIC TEMPLATE {% endcomment %}
-                    {% for trend_details, trend_ratings in trending_movie_list %}
+                    {% for trend in trending %}
                         <div class="col-lg details-related-col">
-                            <a href="movie/{{ trend_details.id }}">
+                            <a href="movie/{{ trend.id }}">
                                 <div class="row">
-                                    <span class="details-related-col-badge"> {{ trend_ratings }} / 5.0 </span>
-                                    <img src="{{ trend_details.poster.url }}" class="details-related-img">
+                                    <span class="details-related-col-badge"> {{ trend.review__rating__avg|floatformat:"1" }} / 5.0 </span>
+                                    <img src="{{ trend.poster.url }}" class="details-related-img">
                                 </div>
                                 <div class="row mt-3 details-related-text">
-                                    <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ trend_details.title }} <span class="font-weight-light"> ({{ trend_details.release_date.year }}) </span> </p>
+                                    <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ trend.title }} <span class="font-weight-light"> ({{ trend.release_date.year }}) </span> </p>
                                 </div>
                             </a>
                         </div>
@@ -178,15 +178,15 @@
             <div id="scrollId2" class="scroll-container mb-5">
                 <div class="row">
                     {% comment %} NEW RELEASES DYNAMIC TEMPLATE {% endcomment %}
-                    {% for nr_details, nr_ratings in new_released_movie_list %}
+                    {% for nr in new_release %}
                         <div class="col-lg details-related-col">
-                            <a href="movie/{{ nr_details.id }}">
+                            <a href="movie/{{ nr.id }}">
                                 <div class="row">
-                                    <span class="details-related-col-badge"> {{ nr_ratings }} / 5.0 </span>
-                                    <img src="{{ nr_details.poster.url }}" class="details-related-img">
+                                    <span class="details-related-col-badge"> {{ nr.review__rating__avg|floatformat:"1" }} / 5.0 </span>
+                                    <img src="{{ nr.poster.url }}" class="details-related-img">
                                 </div>
                                 <div class="row mt-3 details-related-text">
-                                    <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ nr_details.title }} <span class="font-weight-light"> ({{ nr_details.release_date.year }}) </span> </p>
+                                    <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ nr.title }} <span class="font-weight-light"> ({{ nr.release_date.year }}) </span> </p>
                                 </div>
                             </a>
                         </div>
@@ -215,15 +215,15 @@
             <div id="scrollId3" class="scroll-container mb-5">
                 <div class="row">
                     {% comment %} HIGHEST RATED DYNAMIC TEMPLATE {% endcomment %}
-                    {% for hr_details, hr_ratings in highest_rated_movie_list %}
+                    {% for hr in highest_rated %}
                         <div class="col-lg details-related-col">
-                            <a href="movie/{{ hr_details.id }}">
+                            <a href="movie/{{ hr.id }}">
                                 <div class="row">
-                                    <span class="details-related-col-badge"> {{ hr_ratings }} / 5.0 </span>
-                                    <img src="{{ hr_details.poster.url }}" class="details-related-img">
+                                    <span class="details-related-col-badge"> {{ hr.review__rating__avg|floatformat:"1" }} / 5.0 </span>
+                                    <img src="{{ hr.poster.url }}" class="details-related-img">
                                 </div>
                                 <div class="row mt-3 details-related-text">
-                                    <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ hr_details.title }} <span class="font-weight-light"> ({{ hr_details.release_date.year }}) </span> </p>
+                                    <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ hr.title }} <span class="font-weight-light"> ({{ hr.release_date.year }}) </span> </p>
                                 </div>
                             </a>
                         </div>

@@ -4,11 +4,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import *
 from datetime import datetime
 from operator import itemgetter
+from django.db.models import Avg, Func
 
 # functions here
 
-def getMovieIdsFromSpecial(movie_special):
-    return list(Movie.objects.filter(special=movie_special).values_list("id", flat=True))
 
 # Create your views here.
 
@@ -16,7 +15,7 @@ def getMovieIdsFromSpecial(movie_special):
 def index(request):
     context = {}
 
-    # sending context if user is active or not
+    # sending context if user is logged in or not
     context['user_logged'] = False
     try:
         context['username'] = request.session['user']
@@ -25,49 +24,11 @@ def index(request):
     except:
         pass
 
-    all_movies = Movie.objects.all()
-    context['featured'] = Movie.objects.filter(special=Movie.FEATURED)
-    context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
-    new_released_movies = all_movies.order_by('-time_posted')[:7]
-
-    # trending movie ratings
-    trending_movie_ratings = []
-    for movie_id in getMovieIdsFromSpecial(Movie.TRENDING):
-        trending_movie_ratings.append(list(Review.objects.select_related('movie').values_list('rating', flat=True).filter(movie=int(movie_id))))
-    trending_avg_rating_list = []
-    for lst in trending_movie_ratings:
-        trending_avg_rating_list.append(round(sum(lst) / float(len(lst)), 1))
-    context['trending_movie_list'] = list(zip(context['trending'], trending_avg_rating_list))
-
-    # featured movie ratings
-    featured_movie_ratings = []
-    for movie_id in getMovieIdsFromSpecial(Movie.FEATURED):
-        featured_movie_ratings.append(list(Review.objects.select_related('movie').values_list('rating', flat=True).filter(movie=int(movie_id))))
-    featured_avg_rating_list = []
-    for lst in featured_movie_ratings:
-        featured_avg_rating_list.append(round(sum(lst) / float(len(lst)), 1))
-
-    context['featured_movie_list'] = list(zip(context['featured'], featured_avg_rating_list))
-
-    # new released movie ratings
-    new_released_movie_ratings = []
-    for movie in new_released_movies:
-        new_released_movie_ratings.append(list(Review.objects.select_related('movie').values_list('rating', flat=True).filter(movie=int(movie.id))))
-    new_released_avg_rating_list = []
-    for lst in new_released_movie_ratings:
-        new_released_avg_rating_list.append(round(sum(lst) / float(len(lst)), 1))
-
-    context['new_released_movie_list'] = list(zip(new_released_movies, new_released_avg_rating_list))
-
-    # highest rated movie ratings
-    highest_rated_movie_ratings = []
-    for movie in all_movies:
-        highest_rated_movie_ratings.append(list(Review.objects.select_related('movie').values_list('rating', flat=True).filter(movie=int(movie.id))))
-    highest_rated_avg_ratings_list = []
-    for lst in highest_rated_movie_ratings:
-        highest_rated_avg_ratings_list.append(round(sum(lst) / float(len(lst)), 1))
-    
-    context['highest_rated_movie_list'] = sorted(list(zip(all_movies, highest_rated_avg_ratings_list)), key=itemgetter(1), reverse=True)[:7]
+    m = Movie.objects.annotate(Avg('review__rating'))
+    context['featured'] = m.filter(special=Movie.FEATURED)[:7]
+    context['trending'] = m.filter(special=Movie.TRENDING)[:7]
+    context['new_release'] = m.all().order_by('-release_date')[:7]
+    context['highest_rated'] = m.order_by('-review__rating__avg')[:7]
 
     return render(request, 'home.html', context)
 
