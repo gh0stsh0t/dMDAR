@@ -96,7 +96,7 @@ class Review(models.Model):
 
 class Genre(models.Model):
     genre = models.CharField(choices=[(tag.value, tag.name) for tag in GenreChoice], max_length=15, primary_key=True)
-    movies = models.ManyToManyField(Movie)
+    movies = models.ManyToManyField(Movie, blank=True)
 
     def __str__(self):
         return self.genre

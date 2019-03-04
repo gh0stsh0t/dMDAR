@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
 from django.db.models import Count, Avg
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .models import Movie, Review, Genre, Actor, Watch, User
 from .forms import UserModelForm, MovieModelForm, ReviewModelForm
 from datetime import datetime
 from operator import itemgetter
-from django.db.models import Avg, Func
-
+from django.db.models import Avg, Func, Count
 
 # Create your views here.
 
@@ -29,18 +28,28 @@ def index(request):
     context['new_release'] = m.all().order_by('-release_date')[:7]
     context['highest_rated'] = m.order_by('-review__rating__avg')[:7]
 
-    return render(request, 'home.html', context)
+    return render(request, 'index.html', context)
 
 
 def catalog(request, page=0):
     context = {}
+
+    # sending context if user is logged in or not
+    context['user_logged'] = False
+    try:
+        context['username'] = request.session['user']
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+        context['user_logged'] = True
+    except:
+        pass
+        
     offset = page * 10
     m = Movie.objects.annotate(Count('review'), Avg('review__rating'))
-    if request.method == 'GET':
-        sorter = request.GET.get('sort', '')
-        order = request.GET.get('order', '-')
-        search = request.GET.get('search', '')
-        show = int(request.GET.get('show', 0))
+    if request.method == 'POST':
+        sorter = request.POST.get('sort', '')
+        order = request.POST.get('order', '-')
+        search = request.POST.get('search', '')
+        show = int(request.POST.get('show', 0))
         if sorter == 'az':
             sorter = 'title'
         elif sorter == 'release':
@@ -85,15 +94,18 @@ def login(request):
                 request.session['id'] = m.id
                 request.session['user'] = m.username
                 request.session['type'] = m.usertype
-                return redirect('/')
+                context['fail'] = False
+                return JsonResponse(context)
             else:
                 context['fail'] = True
-                return render(request, 'home.html', context)
+                # return render(request, 'index.html', context)
+                return JsonResponse(context)
         except:
             context['fail'] = True
-            return render(request, 'home.html', context)
+            return JsonResponse(context)
     else:
-        return redirect('/')
+        context['fail'] = False
+        return JsonResponse(context)
 
 
 def logout(request):

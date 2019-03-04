@@ -46,12 +46,15 @@
                 <a class="p-0 nav-link nav-profile" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     <div class="media details-profile-hover">
-                        <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+                        <img src="{% if user_logged %} {{ user_pic.url }} {% endif %}"
                             class="align-self-center mr-3 details-profile-img">
                         <div class="media-body">
                             <p class="letter-spacing text-uppercase font-weight-bold w-100 align-self-center mt-3">
-                                Patty
-                                Jenkins
+                                {% if user_logged %}
+                                    {{ username }}
+                                {% else %}
+                                    Username
+                                {% endif %}
                                 <span class="ml-4 fa fa-angle-down"></span>
                             </p>
                         </div>
@@ -61,7 +64,7 @@
                     <a class="dropdown-item" href="user.html">My Movies</a>
                     <a class="dropdown-item" href="user_movies.html">My Reviews</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Log Out</a>
+                    <a class="dropdown-item" href="logout">Log Out</a>
                 </div>
             </span>
             <span class="nav-item dropdown nav-login-link">
@@ -73,16 +76,20 @@
                     </p>
                 </a>
                 <div class="dropdown-menu nav-login-drop" aria-labelledby="navbarDropdown">
-                    <form class="px-4 py-3">
+                    <form method="post" class="px-4 py-3" id="login-form">
+                        {% csrf_token %}
                         <div class="form-group">
-                            <label for="exampleDropdownFormEmail1">Email address</label>
-                            <input type="email" class="form-control" id="exampleDropdownFormEmail1"
-                                placeholder="email@example.com">
+                            <label for="exampleDropdownFormUsername">Username</label>
+                            <input type="text" class="form-control" id="exampleDropdownFormUsername"
+                                placeholder="johndoe" name="username">
                         </div>
                         <div class="form-group">
                             <label for="exampleDropdownFormPassword1">Password</label>
                             <input type="password" class="form-control" id="exampleDropdownFormPassword1"
-                                placeholder="Password">
+                                placeholder="Password" name="password">
+                            <div class="invalid-feedback" style="display: none;">
+                                Check your credentials.
+                            </div>
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="dropdownCheck">
@@ -90,10 +97,10 @@
                                 Remember me
                             </label>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3">Sign in</button>
+                        <button type="submit" class="btn btn-primary mt-3" >Sign in</button>
                     </form>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="signup.html">New around here? Sign up</a>
+                    <a class="dropdown-item" href="signup">New around here? Sign up</a>
                 </div>
             </span>
         </div>
@@ -118,7 +125,7 @@
                         </a>
                     </div>
                     <div class="row">
-                        <a href="catalog.html">
+                        <a href="{% url 'mobi:catalog' %}">
                             <p class="text-uppercase"> Catalog </p>
                         </a>
                     </div>
@@ -167,9 +174,7 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
         integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
         crossorigin="anonymous"></script>
@@ -178,9 +183,7 @@
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="{% static 'mobi/js/slider.js' %}"></script>
     <script type="text/javascript" src="{% static 'mobi/js/scripts.js' %}"></script>
-
     {% block scripts %}
-
     {% endblock %}
 </body>
 
