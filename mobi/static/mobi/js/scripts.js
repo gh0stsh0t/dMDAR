@@ -319,12 +319,12 @@ $('#drop-sort, #drop-results').change(function() {
 });
 
 function filter() {
-    $.ajax({
-        type: 'POST',
-        url: 'catalog',
-        data: 
-        success: function(data) {
+    // $.ajax({
+    //     type: 'POST',
+    //     url: 'catalog',
+    //     data: 
+    //     success: function(data) {
             
-        }
-    });
+    //     }
+    // });
 }

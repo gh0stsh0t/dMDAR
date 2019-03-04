@@ -45,7 +45,7 @@ def catalog(request, page=0):
 
     context['genres'] = Genre.objects.all()
         
-    offset = page *     
+    offset = page * 10
     m = Movie.objects.annotate(Count('review'), Avg('review__rating'))
     if request.method == 'POST':
         sorter = request.POST.get('sort', '')
@@ -79,7 +79,19 @@ def details(request, movie_id):
 
 def user(request, username):
     context = {}
-    context['user'] = User.objects.get(username=username)
+    # sending context if user is logged in or not
+    context['user_logged'] = False
+    try:
+        context['username'] = request.session['user']
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+        context['user_logged'] = True
+    except:
+        pass
+    u = User.objects.annotate(Count('review', distinct=True), Count('movie', distinct=True))
+    m = Movie.objects.annotate(Avg('review__rating'))
+    context['user'] = u.get(username=username)
+    context['reviews'] = Review.objects.filter(reviewer=request.session['id'])
+    context['movies'] = m
     if username == request.session['user']:
         context['editable'] = True
     else:

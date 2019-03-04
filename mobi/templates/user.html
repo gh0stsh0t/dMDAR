@@ -6,7 +6,13 @@ Moby Reviews
 
 {% block nav-type %}nav-bar{% endblock nav-type %}
 
-{% block custom-nav %}nav-account-hide nav-login-hide{% endblock custom-nav %}
+{% block custom-nav %}
+    {% if user_logged %} 
+        nav-login-hide
+    {% else %}
+        nav-account-hide
+    {% endif %}
+{% endblock custom-nav %}
 
 {% block home-active %}active-tab{% endblock home-active %}
 
@@ -16,10 +22,15 @@ Moby Reviews
 <div class="row details-content-margin w-100">
     <div class="row w-100 container-margin-top">
         <div id="profile-info" class="media mt-5">
-            <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
+            <img src="{% if user_logged %} {{ user_pic.url }} {% endif %}"
                 class="align-self-center mr-5 user-profile-img">
             <div class="media-body">
-                <h2 class="mt-2 font-weight-bold text-uppercase letter-spacing">Patty Jenkins
+                <h2 class="mt-2 font-weight-bold text-uppercase letter-spacing">
+                    {% if user_logged %}
+                        {{ username }}
+                    {% else %}
+                        Username
+                    {% endif %}
                     <a href="editprofile.html"><span
                             class="fa fa-edit button-inactive ml-2 edit-profile-btn"></span></a>
                 </h2>
@@ -32,11 +43,11 @@ Moby Reviews
         <div class="nav nav-tabs mt-5" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-user-reviews" role="tab"
                 aria-controls="nav-home" aria-selected="true"><span class="user-tab"> My Reviews <span
-                        class="font-weight-lighter"> (10)
+                        class="font-weight-lighter"> ({{ user.review__count }})
                     </span> </span></a>
             <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-user-movies" role="tab"
                 aria-controls="nav-profile" aria-selected="false"><span class="user-tab"> My Movies <span class="font-weight-lighter">
-                        (23) </span> </span></a>
+                        ({{ user.movie__count }}) </span> </span></a>
         </div>
     </nav>
 
@@ -116,121 +127,29 @@ Moby Reviews
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">
-                                <span class="mr-3">
-                                    2.5 / 5.0
-                                </span>
-                                <span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                </span>
+                        {% for review in reviews %}
+                            <tr>
+                                <th scope="row">
+                                    <span class="mr-3">
+                                        {{ review.rating|floatformat:"1" }} / 5.0
+                                    </span>
+                                    <span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star"></span>
+                                        <span class="fa fa-star"></span>
+                                    </span>
 
-                            </th>
-                            <td>Wonder Woman (2017)</td>
-                            <td>How to Train Your Dragon: The Hidden World brings the franchise to a close with an
-                                affectionate chapter that continues the adventures of the Viking boy-turned-chief Hiccup
-                                (Jay Baruchel) and his faithful dragon Toothless. - Associated Press</td>
-                            <td class="user-reviews-actions">
-                                <span class="fa fa-edit button-inactive mt-3 mr-4" onclick="showEditReview(0)"></span>
-                                <span class="fa fa-trash button-inactive mr-2" onclick="archiveReview(0)"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <span class="mr-3">
-                                    2.5 / 5.0
-                                </span>
-                                <span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                </span>
-
-                            </th>
-                            <td>Wonder Woman (2017)</td>
-                            <td>How to Train Your Dragon: The Hidden World brings the franchise to a close with an
-                                affectionate chapter that continues the adventures of the Viking boy-turned-chief Hiccup
-                                (Jay Baruchel) and his faithful dragon Toothless. - Associated Press</td>
-                            <td class="user-reviews-actions">
-                                <span class="fa fa-edit button-inactive mt-3 mr-4" onclick="showEditReview(0)"></span>
-                                <span class="fa fa-trash button-inactive mr-2" onclick="archiveReview(0)"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <span class="mr-3">
-                                    2.5 / 5.0
-                                </span>
-                                <span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                </span>
-
-                            </th>
-                            <td>Wonder Woman (2017)</td>
-                            <td>How to Train Your Dragon: The Hidden World brings the franchise to a close with an
-                                affectionate chapter that continues the adventures of the Viking boy-turned-chief Hiccup
-                                (Jay Baruchel) and his faithful dragon Toothless. - Associated Press</td>
-                            <td class="user-reviews-actions">
-                                <span class="fa fa-edit button-inactive mt-3 mr-4" onclick="showEditReview(0)"></span>
-                                <span class="fa fa-trash button-inactive mr-2" onclick="archiveReview(0)"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <span class="mr-3">
-                                    2.5 / 5.0
-                                </span>
-                                <span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                </span>
-
-                            </th>
-                            <td>Wonder Woman (2017)</td>
-                            <td>How to Train Your Dragon: The Hidden World brings the franchise to a close with an
-                                affectionate chapter that continues the adventures of the Viking boy-turned-chief Hiccup
-                                (Jay Baruchel) and his faithful dragon Toothless. - Associated Press</td>
-                            <td class="user-reviews-actions">
-                                <span class="fa fa-edit button-inactive mt-3 mr-4" onclick="showEditReview(0)"></span>
-                                <span class="fa fa-trash button-inactive mr-2" onclick="archiveReview(0)"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <span class="mr-3">
-                                    2.5 / 5.0
-                                </span>
-                                <span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                </span>
-
-                            </th>
-                            <td>Wonder Woman (2017)</td>
-                            <td>How to Train Your Dragon: The Hidden World brings the franchise to a close with an
-                                affectionate chapter that continues the adventures of the Viking boy-turned-chief Hiccup
-                                (Jay Baruchel) and his faithful dragon Toothless. - Associated Press</td>
-                            <td class="user-reviews-actions">
-                                <span class="fa fa-edit button-inactive mt-3 mr-4" onclick="showEditReview(0)"></span>
-                                <span class="fa fa-trash button-inactive mr-2" onclick="archiveReview(0)"></span>
-                            </td>
-                        </tr>
+                                </th>
+                                <td>{{ review.movie }} ({{ review.movie.release_date.year }})</td>
+                                <td> {{ review.comment }} </td>
+                                <td class="user-reviews-actions">
+                                    <span class="fa fa-edit button-inactive mt-3 mr-4" onclick="showEditReview(0)"></span>
+                                    <span class="fa fa-trash button-inactive mr-2" onclick="archiveReview(0)"></span>
+                                </td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -416,90 +335,19 @@ Moby Reviews
                         </div>
                     </a>
                 </div>
-                <div class="col-lg details-related-col">
-                    <a href="details.html">
-                        <div class="row">
-                            <span class="details-related-col-badge">3.5 / 5.0 </span>
-                            <img src="poster.jpg" class="details-related-img">
-                        </div>
-                        <div class="row mt-3 details-related-text">
-                            <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg details-related-col">
-                    <a href="details.html">
-                        <div class="row">
-                            <span class="details-related-col-badge">3.5 / 5.0 </span>
-                            <img src="poster.jpg" class="details-related-img">
-                        </div>
-                        <div class="row mt-3 details-related-text">
-                            <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg details-related-col">
-                    <a href="details.html">
-                        <div class="row">
-                            <span class="details-related-col-badge">3.5 / 5.0 </span>
-                            <img src="poster.jpg" class="details-related-img">
-                        </div>
-                        <div class="row mt-3 details-related-text">
-                            <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg details-related-col">
-                    <a href="details.html">
-                        <div class="row">
-                            <span class="details-related-col-badge">3.5 / 5.0 </span>
-                            <img src="poster.jpg" class="details-related-img">
-                        </div>
-                        <div class="row mt-3 details-related-text">
-                            <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg details-related-col">
-                    <a href="details.html">
-                        <div class="row">
-                            <span class="details-related-col-badge">3.5 / 5.0 </span>
-                            <img src="poster.jpg" class="details-related-img">
-                        </div>
-                        <div class="row mt-3 details-related-text">
-                            <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg details-related-col">
-                    <a href="details.html">
-                        <div class="row">
-                            <span class="details-related-col-badge">3.5 / 5.0 </span>
-                            <img src="poster.jpg" class="details-related-img">
-                        </div>
-                        <div class="row mt-3 details-related-text">
-                            <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg details-related-col">
-                    <a href="details.html">
-                        <div class="row">
-                            <span class="details-related-col-badge">3.5 / 5.0 </span>
-                            <img src="poster.jpg" class="details-related-img">
-                        </div>
-                        <div class="row mt-3 details-related-text">
-                            <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                                Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                        </div>
-                    </a>
-                </div>
+                {% for movie in movies %}
+                    <div class="col-lg details-related-col">
+                        <a href="{% url 'mobi:details' movie.id %}">
+                            <div class="row">
+                                <span class="details-related-col-badge">{{ movie.review__rating__avg|floatformat:"1" }} / 5.0 </span>
+                                <img src="{{ movie.poster.url }}" class="details-related-img">
+                            </div>
+                            <div class="row mt-3 details-related-text">
+                                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ movie.title }} <span class="font-weight-light"> ({{ movie.release_date.year }}) </span> </p>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
 
             <div class="row w-100 mb-5">
