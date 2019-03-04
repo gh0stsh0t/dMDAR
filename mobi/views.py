@@ -42,8 +42,10 @@ def catalog(request, page=0):
         context['user_logged'] = True
     except:
         pass
+
+    context['genres'] = Genre.objects.all()
         
-    offset = page * 10
+    offset = page *     
     m = Movie.objects.annotate(Count('review'), Avg('review__rating'))
     if request.method == 'POST':
         sorter = request.POST.get('sort', '')

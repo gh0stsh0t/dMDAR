@@ -278,7 +278,7 @@ function archiveReview(id) {
     alert(id);
 }
 
-// own scripts
+// OWN SCRIPTS
 
 // login module
 $('#login-form .form-control').keypress(function(e){
@@ -310,7 +310,6 @@ $('#login-form').submit(function(e) {
 });
 
 // filter catalogs page
-
 var filterTimer;
 var filterInterval = 3000;
 $('#drop-sort, #drop-results').change(function() {
@@ -323,8 +322,9 @@ function filter() {
     $.ajax({
         type: 'POST',
         url: 'catalog',
+        data: 
         success: function(data) {
-
+            
         }
     });
 }
