@@ -19,7 +19,7 @@
 {% block catalog-active %}{% endblock catalog-active %}
 
 {% block body %}
-<div class="home-background" style="background-image: url('bg.jpg')">
+<div class="home-background" style="background-image: url('{bg.jpg}')">
 </div>
 <div class="row home-featured text-center mb-5">
     <div class="row w-100">
@@ -42,7 +42,7 @@
     </div>
     <div class="row w-100 mb-5">
         <div class="col pl-5 pr-0 home-go-to-details">
-            <a href="{% url 'mobi:details' 0 %}"> Go to review <span class="ml-2 fa fa-angle-right"></span> </a>
+            <a href="details.html"> Go to review <span class="ml-2 fa fa-angle-right"></span> </a>
         </div>
     </div>
 </div>
@@ -118,6 +118,8 @@
             {% endfor %}
         </div>
     </div>
+
+</div>
 </div>
 
 {% endblock body %}

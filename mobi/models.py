@@ -56,6 +56,26 @@ class User(models.Model):
         return self.username
 
 
+class Genre(models.Model):
+    genre = models.CharField(choices=[(tag.value, tag.name) for tag in GenreChoice], max_length=15, primary_key=True)
+
+    def __str__(self):
+        return self.genre
+
+class Actor(models.Model):
+    firstname = models.CharField(max_length=35)
+    lastname = models.CharField(max_length=35)
+    link = models.URLField(null=True)
+    picture = models.ImageField(null=True, upload_to='artist_pic/')
+
+    def __str__(self):
+        return "{}, {}".format(self.lastname, self.firstname)
+
+class Cast(models.Model):
+    role = models.CharField(max_length=35)
+    actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
+
+
 class Movie(models.Model):
     title = models.CharField(max_length=200)
     isactive = models.BooleanField(default=True)
@@ -78,6 +98,8 @@ class Movie(models.Model):
     poster = models.ImageField(upload_to='poster/')
     time_posted = models.DateTimeField(auto_now_add=True)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    genres = models.ManyToManyField(Genre, blank=True)
+    cast = models.ManyToManyField(Cast, blank=True)
 
     def __str__(self):
         return self.title
@@ -92,24 +114,6 @@ class Review(models.Model):
 
     def __str__(self):
         return "Review by {} for {}".format(self.reviewer.username, self.movie.title)
-
-
-class Genre(models.Model):
-    genre = models.CharField(choices=[(tag.value, tag.name) for tag in GenreChoice], max_length=15, primary_key=True)
-    movies = models.ManyToManyField(Movie, blank=True)
-
-    def __str__(self):
-        return self.genre
-
-
-class Actor(models.Model):
-    firstname = models.CharField(max_length=35)
-    lastname = models.CharField(max_length=35)
-    link = models.URLField(null=True)
-    movies = models.ManyToManyField(Movie, blank=True, null=True)
-
-    def __str__(self):
-        return "{}, {}".format(self.lastname, self.firstname)
 
 
 class Watch(models.Model):
