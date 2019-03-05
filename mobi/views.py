@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
-from django.db.models import Count, Avg
-from django.http import HttpResponse, HttpResponseRedirect
-from .models import Movie, Review, Genre, Actor, Watch, User
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from .models import Movie, Review, Genre, Actor, Watch, User, GenreChoice
 from .forms import UserModelForm, MovieModelForm, ReviewModelForm
 from datetime import datetime
 from operator import itemgetter
-from django.db.models import Avg, Func
+from django.db.models import Avg, Func, Count
 
 
 # Create your views here.
@@ -29,18 +28,44 @@ def index(request):
     context['new_release'] = m.all().order_by('-release_date')[:7]
     context['highest_rated'] = m.order_by('-review__rating__avg')[:7]
 
-    return render(request, 'home.html', context)
+    return render(request, 'index.html', context)
 
 
-def catalog(request, page=0):
+def catalog(request, page=1):
     context = {}
-    offset = page * 10
+
+    # sending context if user is logged in or not
+    context['user_logged'] = False
+    try:
+        context['username'] = request.session['user']
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+        context['user_logged'] = True
+    except:
+        pass
+
+    context['genres'] = list(GenreChoice)
+
+    offset = page - 1
     m = Movie.objects.annotate(Count('review'), Avg('review__rating'))
-    if request.method == 'GET':
-        sorter = request.GET.get('sort', '')
-        order = request.GET.get('order', '-')
-        search = request.GET.get('search', '')
-        show = int(request.GET.get('show', 0))
+    if request.method == 'POST':
+        sorter = request.POST.get('sort', '')
+        order = request.POST.get('order', '-')
+        search = request.POST.get('search', '')
+        min_rating = float(request.POST.get('min', 0))
+        max_rating = float(request.POST.get('max', 5))
+        show = int(request.POST.get('show', 0))
+        offset *= show
+
+        genres = []
+        # For rendering the list of genres please use the genres context
+        # example usage: for genre in GenreChoice:
+        #                    <input type="text" name="{{genre.name}}" value="{{genre.value}}"/>
+        for genre in GenreChoice:
+            try:
+                genres += request.POST[genre.name]
+            except KeyError:
+                pass
+
         if sorter == 'az':
             sorter = 'title'
         elif sorter == 'release':
@@ -51,28 +76,111 @@ def catalog(request, page=0):
             sorter = 'review__count'
         else:
             sorter = 'time_posted'
-        context['movies'] = m.filter(title__contains=search).order_by(order + sorter)[0 + offset:show + offset]
 
+        filters = dict(title__contains=search, review__rating__range=(min_rating, max_rating), genres__in=genres)
+        context['movies'] = m.filter(**filters).order_by(order + sorter)[0 + offset:show + offset]
     else:
-        context['movies'] = m.all().order_by('-time_posted')[0 + offset:10 + offset]
+        context['movies'] = m.all().order_by('-time_posted')[0 + offset:16 + offset]
     return render(request, 'catalog.html', context)
 
 
 def details(request, movie_id):
     context = {}
-    context['movie'] = Movie.objects.get(id=movie_id)
-    context['reviews'] = context['movie'].review_set.all()
-    context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
+    context['user_logged'] = False
+
+    try:
+
+        context['username'] = request.session['user']
+
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+
+        context['user_logged'] = True
+
+    except:
+
+        pass
+    context['movie'] = Movie.objects.annotate(Avg('review__rating')).get(id=movie_id)
+    reviews = context['movie'].review_set
+    context['overall'] = context['movie'].review__rating__avg
+    context['count'] = reviews.count()
+    context['breakdown'] = [reviews.filter(rating=rating).count() for rating in range(6)]
+    context['reviews'] = reviews.all()
+    context['cast'] = context['movie'].cast.all()
+    context['watch'] = context['movie'].watch_set.all()
+    context['trending'] = Movie.objects.annotate(Avg('review__rating')).filter(special=Movie.TRENDING)
+    context['top_rev'] = reviews.all().order_by('-rating')
     return render(request, 'details.html', context)
 
 
 def user(request, username):
     context = {}
-    context['user'] = User.objects.get(username=username)
-    if username == request.session['user']:
-        context['editable'] = True
-    else:
-        context['editable'] = False
+    # sending context if user is logged in or not
+    context['user_logged'] = False
+    try:
+        context['username'] = request.session['user']
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+        context['user_logged'] = True
+    except:
+        pass
+    # m = Movie.objects.annotate(Avg('review__rating'))
+    # context['user'] = u.get(username=username)
+    # context['reviews'] = Review.objects.filter(reviewer=request.session['id'])
+    # context['movies'] = m
+    user = User.objects.annotate(Count('review', distinct=True), Count('movie', distinct=True))
+    context['user'] = user.get(username=username)
+    reviews = Review.objects
+    min_rating = request.GET.get('min', 0)
+    max_rating = request.GET.get('max', 5)
+    status = request.GET.get('status_r', 'active') == 'active'
+    context['reviews'] = reviews.filter(rating__range=(min_rating, max_rating)).filter(movie__isactive=status).filter(reviewer=context['user'])
+    print(context['reviews'])
+    movies = Movie.objects.filter(posted_by=context['user'])
+    status = request.GET.get('status_m', 'active') == 'active'
+
+    # Hello, code below should be replaced with the ajax function of catalog
+
+    context['genres'] = GenreChoice
+    m = movies.annotate(Count('review'), Avg('review__rating'))
+    if request.method == 'POST':
+        sorter = request.POST.get('sort', '')
+        order = request.POST.get('order', '-')
+        search = request.POST.get('search', '')
+        min_rating = float(request.POST.get('min', 0))
+        max_rating = float(request.POST.get('max', 5))
+        show = int(request.POST.get('show', 0))
+
+        genres = []
+        # For rendering the list of genres please use the genres context
+        # example usage: for genre in GenreChoice:
+        #                    <input type="text" name="{{genre.name}}" value="{{genre.value}}"/>
+        for genre in GenreChoice:
+            try:
+                genres += request.POST[genre.name]
+            except KeyError:
+                pass
+        print(genres)
+
+        if sorter == 'az':
+            sorter = 'title'
+        elif sorter == 'release':
+            sorter = 'release_date'
+        elif sorter == 'score':
+            sorter = 'review__rating__avg'
+        elif sorter == 'reviews':
+            sorter = 'review__count'
+        else:
+            sorter = 'time_posted'
+
+        filters = dict(title__contains=search, review__rating__range=(min_rating, max_rating), genres__in=genres, isactive=status)
+        context['movies'] = m.filter(**filters).order_by(order + sorter)[0:show]
+    try:
+        if username == request.session['user']:
+            context['editable'] = True
+        else:
+            context['editable'] = False
+    except:
+        pass
+    
     return render(request, 'user.html', context)
 
 
@@ -85,15 +193,18 @@ def login(request):
                 request.session['id'] = m.id
                 request.session['user'] = m.username
                 request.session['type'] = m.usertype
-                return redirect('/')
+                context['fail'] = False
+                return JsonResponse(context)
             else:
                 context['fail'] = True
-                return render(request, 'home.html', context)
+                # return render(request, 'index.html', context)
+                return JsonResponse(context)
         except:
             context['fail'] = True
-            return render(request, 'home.html', context)
+            return JsonResponse(context)
     else:
-        return redirect('/')
+        context['fail'] = False
+        return JsonResponse(context)
 
 
 def logout(request):
@@ -105,9 +216,6 @@ def logout(request):
         pass
     return redirect('/')
 
-
-def signup(request):
-    context = {}
     return render(request, 'signup.html', context)
 
 
@@ -139,6 +247,19 @@ def review(request, movie_id):
 def edit_review(request, movie_id, review_id):
     # This is placeholder code for ajax review code
     context = {}
+    context['user_logged'] = False
+
+    try:
+
+        context['username'] = request.session['user']
+
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+
+        context['user_logged'] = True
+
+    except:
+
+        pass
     review = Review.objects.get(id=review_id)
     # For checking if logged in, manual user creation huhu
     try:
@@ -160,8 +281,21 @@ def edit_review(request, movie_id, review_id):
 
 def post(request):
     context = {}
+    context['user_logged'] = False
+
+    try:
+
+        context['username'] = request.session['user']
+
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+
+        context['user_logged'] = True
+
+    except:
+
+        pass
     if request.method == 'POST':
-        form = MovieModelForm(request.POST)
+        form = MovieModelForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('/')
@@ -169,16 +303,29 @@ def post(request):
             context['form'] = form
             return render(request, 'addmovie.html', context)
     else:
-        context['form'] = MovieModelForm()
+        context['form'] = MovieModelForm(initial={'posted_by': request.session['id']})
         return render(request, 'addmovie.html', context)
 
 
 def edit_post(request, movie_id):
     context = {}
+    context['user_logged'] = False
+
+    try:
+
+        context['username'] = request.session['user']
+
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+
+        context['user_logged'] = True
+
+    except:
+
+        pass
     movie = Movie.objects.get(id=movie_id)
     context['movie'] = movie
     if request.method == 'POST':
-        form = MovieModelForm(request.POST, instance=movie)
+        form = MovieModelForm(request.POST, request.FILES, instance=movie)
         if form.is_valid():
             form.save()
             return redirect('/movie/' + str(movie_id))
@@ -190,15 +337,47 @@ def edit_post(request, movie_id):
         return render(request, 'editmovie.html', context)
 
 
-def signup(request):
+def edit_user(request, username):
     context = {}
+    context['user_logged'] = False
+
+    try:
+
+        context['username'] = request.session['user']
+
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+
+        context['user_logged'] = True
+
+    except:
+
+        pass
+    user = User.objects.get(id=request.session['id'])
     if request.method == 'POST':
-        form = UserModelForm(request.POST)
+        form = UserModelForm(request.POST, request.FILES, instance=user)
+        print(form)
         if form.is_valid():
             form.save()
             return redirect('/')
         else:
             context['form'] = form
+            return render(request, 'editprofile.html', context)
+    else:
+        context['form'] = UserModelForm(instance=user)
+        return render(request, 'editprofile.html', context)
+
+
+def signup(request):
+    context = {}
+
+    if request.method == 'POST':
+        form = UserModelForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+        else:
+            context['form'] = form
+            print(form.errors)
             return render(request, 'signup.html', context)
     else:
         context['form'] = UserModelForm()

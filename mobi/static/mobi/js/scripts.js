@@ -23,6 +23,10 @@ window.onload = function() {
             }
         });
     }, 2000);
+    r1.addEventListener('update', (input, value) => {
+        $('first-star-filter').val(value);
+        $('second-star-filter').val(value);
+    });
     const r2 = new JSR(['#range-2-1a', '#range-2-2a'], {
         sliders: 2,
         min: 0,
@@ -49,6 +53,9 @@ window.onload = function() {
     }, 2000);
 };
 
+$(document).ready(function () {
+    bsCustomFileInput.init()
+})
 
 
 $(function () {
@@ -272,4 +279,60 @@ function showEditReview(id){
 
 function archiveReview(id) {
     alert(id);
+}
+
+// OWN SCRIPTS
+
+// login module
+$('#login-form .form-control').keypress(function(e){
+    var keycode = (event.keyCode ? event.keyCode : event.which);
+    if(keycode == '13') { // check if enter key is pressed
+        $('#login-form').trigger('submit');
+    }
+});
+
+$('#login-form').submit(function(e) {
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: 'login',
+        data: $(this).serialize(),
+        success: function(data) {
+            if(data.fail) {
+                $('.invalid-feedback').show();
+                $('#exampleDropdownFormPassword1').addClass('is-invalid');
+            }
+            else {
+                location.reload();
+            }
+        },
+        error: function(data) {
+
+        }
+    });
+});
+
+// filter catalogs page
+var filterTimer;
+var filterInterval = 250;
+$('#drop-sort, #drop-num-results').change(function() {
+    console.log("dropdown filter");
+    clearTimeout(filterTimer);
+    filter();
+    filterTimer = setTimeout(filter, filterInterval);
+});
+
+$(document).on('change', '.form-check-input', function() {
+    console.log("test");
+});
+
+function filter() {
+    // $.ajax({
+    //     type: 'POST',
+    //     url: 'catalog',
+    //     data: 
+    //     success: function(data) {
+            
+    //     }
+    // });
 }

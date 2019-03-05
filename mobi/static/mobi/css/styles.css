@@ -120,6 +120,20 @@ input[type="color"]:focus,
     border-top: none;
 }
 
+.error-text {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding-top: 35vh;
+}
+
+.center-text {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
 
 
 
@@ -278,6 +292,13 @@ input[type="color"]:focus,
 .form-control {
     background-color: rgb(15, 14, 27);
     border: none;
+    color: white;
+} 
+
+.nav-search .form-control {
+    background-color: rgb(15, 14, 27);
+    border: none;
+    color: gray;
 } 
 
 .form-control:focus {
@@ -441,6 +462,7 @@ input[type="color"]:focus,
     padding-top: 2px;
     color:white;
     left: 40%;
+    right: 40%;
     text-align: center;
     font-weight: bold;
     font-size: 0.7em;
@@ -760,4 +782,17 @@ input[type="color"]:focus,
 
 .nav-tabs {
     border-bottom: unset;
+}
+
+
+.sign-up-bottom-margin {
+    margin-bottom: 20vh;
+}
+
+.genre-select {
+    height: 21vh !important;
+}
+
+select.form-control[multiple], select.form-control[size] {
+    height: unset;
 }
