@@ -63,7 +63,6 @@ class Genre(models.Model):
     def __str__(self):
         return self.genre
 
-
 class Actor(models.Model):
     firstname = models.CharField(max_length=35)
     lastname = models.CharField(max_length=35)
@@ -78,7 +77,7 @@ class Cast(models.Model):
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.actor.lastname + ", " + self.actor.firstname + " - " + self.site
+        return self.actor.lastname + ", " + self.actor.firstname + " - " + self.role
 
 
 class Movie(models.Model):
@@ -104,19 +103,10 @@ class Movie(models.Model):
     time_posted = models.DateTimeField(auto_now_add=True)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     genres = models.ManyToManyField(Genre, blank=True)
-    cast = models.ManyToManyField(Actor, through=Cast, blank=True)
+    cast = models.ManyToManyField(Cast, blank=True)
 
     def __str__(self):
         return self.title
-
-
-class Cast(models.Model):
-    role = models.CharField(max_length=35)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.actor.lastname + ", " + self.actor.firstname + " - " + self.rol
 
 
 class Review(models.Model):
