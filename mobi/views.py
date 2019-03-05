@@ -53,7 +53,7 @@ def catalog(request, page=1):
     m = Movie.objects.annotate(Count('review'), Avg('review__rating'))
     if request.method == 'POST' and request.is_ajax():
         sorter = request.POST.get('sort', '')
-        order = request.POST.get('order', '')
+        order = request.POST.get('order', '-')
         search = request.POST.get('search', '')
         min_rating = float(request.POST.get('min', 0))
         max_rating = float(request.POST.get('max', 5))
@@ -72,18 +72,17 @@ def catalog(request, page=1):
 
         if sorter == 'az':
             sorter = 'title'
+            order = ''
         elif sorter == 'release':
             sorter = 'release_date'
         elif sorter == 'score':
             sorter = 'review__rating__avg'
         elif sorter == 'reviews':
             sorter = 'review__count'
-        else:
-            sorter = 'time_posted'
 
         wanted_genre = Genre.objects.filter(genre__in=genres).values('genre')
         #sa genres__in to na part
-        filters = dict(title__contains=search, review__rating__range=(min_rating, max_rating), genres__genre__in=wanted_genre)
+        filters = dict(title__contains=search, review__rating__avg__range=(min_rating, max_rating), genres__genre__in=wanted_genre)
         context['movies'] = m.filter(**filters).order_by(order + sorter)[0 + offset:show + offset]
         print(sorter, order, search, min_rating, max_rating, offset, show)
         # print(context['movies'][0:2].title)
