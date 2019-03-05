@@ -1,22 +1,78 @@
-{% load static %}
 {% extends 'base.html' %}
 
 {% block title %}
-Moby Reviews
+Moby Reviews | Signup
 {% endblock title %}
 
 {% block nav-type %}nav-bar{% endblock nav-type %}
 
-{% block custom-nav %}nav-account-hide{% endblock custom-nav %}
+{% block custom-nav %}nav-login-hide nav-account-hide{% endblock custom-nav %}
 
-{% block home-active %}active-tab{% endblock home-active %}
+{% block home-active %}{% endblock home-active %}
 
 {% block catalog-active %}{% endblock catalog-active %}
 
+{% load crispy_forms_tags %}
+
 {% block body %}
 <div class="row details-content-margin">
-    <div class="row w-100 container-margin-top">
-        <h2 class="mt-5 font-weight-light"> Signup </h2>
-    </div>
+        <div class="row w-100 container-margin-top">
+                <div class="row w-100 mt-5 mb-3">
+                        <h2 class="mt-5 font-weight-light"> Signup </h2>
+                </div>
+
+                <div class="row w-100">
+                        <div class="col-lg-4">
+                                <form class="w-100 mt-5" action="{% url 'mobi:signup' %}" method="POST">
+                                        {% csrf_token %}
+
+                                        <div class="form-group row">
+                                                <label for="id_username" class="col-lg-3 col-form-label requiredField">Username</label>
+                                                <div class="col-lg-9">
+                                                        <input type="text" name="username" maxlength="20" class="textinput textInput form-control" required="" id="id_username">
+                                                </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                                        <label for="id_email" class="col-lg-3 col-form-label requiredField">Email</label>
+                                                        <div class="col-lg-9">
+                                                                <input type="email" name="email" maxlength="254" class="emailinput form-control" required="" id="id_email">
+                                                        </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                                <label for="id_password" class="col-lg-3 col-form-label requiredField">Password</label>
+                                                                <div class="col-lg-9">
+                                                                        <input type="password" name="password" maxlength="20" class="textinput textInput form-control" required="" id="id_password">
+                                                                </div>
+                                                        </div>
+
+                                                        <input type="hidden" value="False" name="id_usertype" />
+
+                                                        <div class="form-group row">
+                                                                        <label for="id_password" class="col-lg-3 col-form-label requiredField">Profile Picture </label>
+                                                                        <div class="col-lg-9">
+                                                                                        <div class="custom-file">
+                                                                                                        <input type="file" name="display_pic" accept="image/*" required="" id="id_display_pic"class="custom-file-input" id="customFile">
+                                                                                                        <label class="custom-file-label" for="customFile">Choose file</label>
+                                                                                                      </div>
+                                                                        </div>
+                                                                </div>
+                                                                
+                                        <input type="submit" class="btn btn-primary" value="Signup">
+                                        <a href="{% url 'mobi:index' %}">
+                                                <button type="button" class="btn btn-outline-danger"> Cancel</button>
+                                        </a>
+                                </form>
+                        </div>
+                </div>
+
+
+        </div>
+</div>
 </div>
 {% endblock body %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+{% endblock %}

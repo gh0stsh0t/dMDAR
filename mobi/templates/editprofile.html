@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Moby Reviews
+Moby Reviews | Edit Profile
 {% endblock title %}
 
 {% block nav-type %}nav-bar{% endblock nav-type %}
@@ -12,10 +12,32 @@ Moby Reviews
 
 {% block catalog-active %}{% endblock catalog-active %}
 
+{% load crispy_forms_tags %}
+
 {% block body %}
 <div class="row details-content-margin">
+    {% if username == username %}
     <div class="row w-100 container-margin-top">
-        <h2 class="mt-5 font-weight-light"> Edit Profile </h2>
+            <form class="w-100" action="{% url 'mobi:edit_post' form.instance.id %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="row mt-5 mb-3">
+                            <h2 class="mt-5 font-weight-light"> Edit "{{ form.username.value }}" </h2>
+                    </div>
+
+                    {{ form|crispy }}
+                    
+                    <input type="submit" class="btn btn-primary" value="Update">
+                    <a href="{% url 'mobi:details' form.instance.id %}">
+                            <button type="button" class="btn btn-outline-danger"> Cancel</button>
+                    </a>
+            </form>
     </div>
+    {% else %}
+        <div class="error-text row w-100 h-100 container-margin-top">
+                        <h1> You don't have permission to edit this profile =( </h1>
+                </div>
+        {% endif %}
+</div>
 </div>
 {% endblock body %}

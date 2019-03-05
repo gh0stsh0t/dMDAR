@@ -4,18 +4,46 @@
 Moby Reviews | Add New Movie
 {% endblock title %}
 
-{% block nav-type %}nav-bar{% endblock nav-type %}
+{% block nav-type %}nav-bar-normal{% endblock nav-type %}
 
-{% block custom-nav %}nav-login-hide{% endblock custom-nav %}
+{% block custom-nav %}
+    {% if user_logged %} 
+        nav-login-hide
+    {% else %}
+        nav-account-hide
+    {% endif %}
+{% endblock custom-nav %}
 
-{% block home-active %}active-tab{% endblock home-active %}
+{% block home-active %}{% endblock home-active %}
 
 {% block catalog-active %}{% endblock catalog-active %}
 
+{% load crispy_forms_tags %}
+
 {% block body %}
 <div class="row details-content-margin">
+    {% if user_logged %}
     <div class="row w-100 container-margin-top">
-        <h2 class="mt-5 font-weight-light"> Add New Movie </h2>
+        <form class="w-100" action="{% url 'mobi:post' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="row mt-5 mb-3">
+                <h2 class="mt-5 font-weight-light">Add New Movie </h2>
+            </div>
+
+            {{ form|crispy }}
+
+            <input type="submit" class="btn btn-primary" value="Add">
+            <a href="{% url 'mobi:index' %}">
+                <button type="button" class="btn btn-outline-danger"> Cancel</button>
+            </a>
+        </form>
     </div>
+    {% else %}
+    <div class="error-text row w-100 h-100 container-margin-top">
+        <h1> Please login before adding </h1>
+    </div>
+    {% endif %}
+</div>
 </div>
 {% endblock body %}
