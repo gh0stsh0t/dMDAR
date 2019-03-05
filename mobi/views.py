@@ -86,13 +86,17 @@ def catalog(request, page=1):
 
 def details(request, movie_id):
     context = {}
-    context['movie'] = Movie.objects.get(id=movie_id)
-    reviews = context['movie'].review_set.all()
-    reviews_reloaded = reviews.annotate(Avg('rating'))
-    context['overall'] = reviews_reloaded.get('rating__avg', 0)
+    context['movie'] = Movie.objects.annotate(Avg('review__rating')).get(id=movie_id)
+    reviews = context['movie'].review_set
+    context['overall'] = context['movie'].review__rating__avg
     context['count'] = reviews.count()
-    context['breakdown'] = [reviews.get(rating=rating) for rating in range(6)]
-    context['reviews'] = reviews
+    context['breakdown'] = [reviews.filter(rating=rating).count() for rating in range(6)]
+    context['reviews'] = reviews.all()
+    actors = []
+    for actor in context['movie'].cast.all():
+        actors += actor.actor
+    context['cast'] = actors
+    context['watch'] = context['movie'].watch_set.all()
     context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
     return render(request, 'details.html', context)
 
