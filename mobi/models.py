@@ -76,7 +76,7 @@ class Cast(models.Model):
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.actor.lastname + ", " + self.actor.firstname + " - " + self.rol
+        return self.actor.lastname + ", " + self.actor.firstname + " - " + self.site
 
 
 class Movie(models.Model):

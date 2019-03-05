@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load mathfilters %}
+
 {% block title %}
 Movie Title | {{ movie.title }}
 {% endblock title %}
@@ -60,25 +62,15 @@ Movie Title | {{ movie.title }}
                         <div class="modal-body p-5 modal-body">
                             <h5 class="modal-title text-center" id="exampleModalLabel"> Watch <span
                                     class="font-weight-bold">
-                                    {{ movie.title }} ({{ movie.release_date.year }}) </span></h5>
+                                    {{ movie.title }} ({{ movie.release_date.year }})  </span></h5>
                             <div class="row mt-5">
-                                <div class="col">
-                                    <a>
-                                        <button type="button" class="btn btn-outline-light w-100">Amazon</button>
-                                    </a></div>
-                                <div class="col">
-                                    <a>
-                                        <button type="button" class="btn btn-outline-light w-100">Goolge
-                                            Play</button>
-                                    </a></div>
-                                <div class="col">
-                                    <a>
-                                        <button type="button" class="btn btn-outline-light w-100">iTunes</button>
-                                    </a></div>
-                                <div class="col">
-                                    <a>
-                                        <button type="button" class="btn btn-outline-light w-100">Netflix</button>
-                                    </a></div>
+                                {% for link in watch %}
+                                    <div class="col">
+                                        <a href="{{ link.url }}">
+                                            <button type="button" class="btn btn-outline-light w-100"> {{ link.site }} </button>
+                                        </a>
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -122,90 +114,20 @@ Movie Title | {{ movie.title }}
         <p class="text-uppercase letter-spacing"> starring </p>
     </div>
     <div class="row mb-5">
-        <div class="col details-starring-col">
-            <div class="row">
-                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
-                    class="details-starring-img">
+        {% for actor in movie.cast.all %}
+            <div class="col details-starring-col">
+                <div class="row">
+                    <img src="{{ actor.picture.url }}"
+                        class="details-starring-img">
+                </div>
+                <div class="row mt-3 details-starring-text">
+                    <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ actor.firstname }} {{ actor.lastname }} </p>
+                </div>
+                <div class="row mt-0 details-starring-text">
+                    <p class="text-uppercase w-100 text-center text-muted"> {{ actor.role }} </p>
+                </div>
             </div>
-            <div class="row mt-3 details-starring-text">
-                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
-            </div>
-            <div class="row mt-0 details-starring-text">
-                <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
-            </div>
-        </div>
-        <div class="col details-starring-col">
-            <div class="row">
-                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
-                    class="details-starring-img">
-            </div>
-            <div class="row mt-3 details-starring-text">
-                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
-            </div>
-            <div class="row mt-0 details-starring-text">
-                <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
-            </div>
-        </div>
-        <div class="col details-starring-col">
-            <div class="row">
-                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
-                    class="details-starring-img">
-            </div>
-            <div class="row mt-3 details-starring-text">
-                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
-            </div>
-            <div class="row mt-0 details-starring-text">
-                <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
-            </div>
-        </div>
-        <div class="col details-starring-col">
-            <div class="row">
-                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
-                    class="details-starring-img">
-            </div>
-            <div class="row mt-3 details-starring-text">
-                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
-            </div>
-            <div class="row mt-0 details-starring-text">
-                <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
-            </div>
-        </div>
-        <div class="col details-starring-col">
-            <div class="row">
-                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
-                    class="details-starring-img">
-            </div>
-            <div class="row mt-3 details-starring-text">
-                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
-            </div>
-            <div class="row mt-0 details-starring-text">
-                <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
-            </div>
-        </div>
-        <div class="col details-starring-col">
-            <div class="row">
-                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
-                    class="details-starring-img">
-            </div>
-            <div class="row mt-3 details-starring-text">
-                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
-            </div>
-            <div class="row mt-0 details-starring-text">
-                <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
-            </div>
-        </div>
-        <div class="col details-starring-col">
-            <div class="row">
-                <img src="http://onehundreddates.com/wp-content/uploads/2014/03/Random-Person-Date-1.jpg"
-                    class="details-starring-img">
-            </div>
-            <div class="row mt-3 details-starring-text">
-                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Patty Jenkins </p>
-            </div>
-            <div class="row mt-0 details-starring-text">
-                <p class="text-uppercase w-100 text-center text-muted"> 17 movies </p>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 
@@ -226,20 +148,19 @@ Movie Title | {{ movie.title }}
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="col-lg-2 mt-n2 mr-5 ml-n4">
-                                <p class="font-weight-bolder details-review-rating mt-0">
-                                    4.0 </p>
+                                <p class="font-weight-bolder details-review-rating mt-0"> {{ overall }} </p>
                             </div>
                         </div>
                         <div class="col-lg-5 mt-5">
                             <div class="row">
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star {% if overall >= 1 %} checked {% endif %}"></span>
+                                <span class="fa fa-star {% if overall >= 2 %} checked {% endif %}"></span>
+                                <span class="fa fa-star {% if overall >= 3 %} checked {% endif %}"></span>
+                                <span class="fa fa-star {% if overall >= 4 %} checked {% endif %}"></span>
+                                <span class="fa fa-star {% if overall >= 5 %} checked {% endif %}"></span>
                             </div>
                             <div class="row mt-3">
-                                <p class="w-100 text-muted"> 18,204 reviews </p>
+                                <p class="w-100 text-muted"> {{ count }} review(s)</p>
                             </div>
                         </div>
 
@@ -250,11 +171,26 @@ Movie Title | {{ movie.title }}
                             <span class="fa fa-star checked"></span>
                             <span class="fa fa-star checked"></span>
                             <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                        </div>
+                        <div class="col-lg-5 p-0">
+                            <div class="progress mt-1">
+                                <div class="progress-bar" role="progressbar" style="width: {{ breakdown.5|div:count|mul:100 }}%;" aria-valuenow="80"
+                                    aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-lg-4 p-0">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
                             <span class="fa fa-star"></span>
                         </div>
                         <div class="col-lg-5 p-0">
                             <div class="progress mt-1">
-                                <div class="progress-bar" role="progressbar" style="width: 70%;" aria-valuenow="80"
+                                <div class="progress-bar" role="progressbar" style="width: {{ breakdown.4|div:count|mul:100 }}%;" aria-valuenow="80"
                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
@@ -269,7 +205,7 @@ Movie Title | {{ movie.title }}
                         </div>
                         <div class="col-lg-5 p-0">
                             <div class="progress mt-1">
-                                <div class="progress-bar" role="progressbar" style="width: 10%;" aria-valuenow="80"
+                                <div class="progress-bar" role="progressbar" style="width: {{ breakdown.3|div:count|mul:100 }}%;" aria-valuenow="80"
                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
@@ -284,7 +220,7 @@ Movie Title | {{ movie.title }}
                         </div>
                         <div class="col-lg-5 p-0">
                             <div class="progress mt-1">
-                                <div class="progress-bar" role="progressbar" style="width: 5%;" aria-valuenow="80"
+                                <div class="progress-bar" role="progressbar" style="width: {{ breakdown.2|div:count|mul:100 }}%;" aria-valuenow="80"
                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
@@ -299,26 +235,26 @@ Movie Title | {{ movie.title }}
                         </div>
                         <div class="col-lg-5 p-0">
                             <div class="progress mt-1">
-                                <div class="progress-bar" role="progressbar" style="width: 5%;" aria-valuenow="80"
+                                <div class="progress-bar" role="progressbar" style="width: {{ breakdown.1|div:count|mul:100 }}%;" aria-valuenow="80"
                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-lg-4 p-0">
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                        </div>
-                        <div class="col-lg-5 p-0">
-                            <div class="progress mt-1">
-                                <div class="progress-bar" role="progressbar" style="width: 10%;" aria-valuenow="80"
-                                    aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="col-lg-4 p-0">
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                            </div>
+                            <div class="col-lg-5 p-0">
+                                <div class="progress mt-1">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ breakdown.0|div:count|mul:100 }}%;" aria-valuenow="80"
+                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     <div class="row mt-5 mb-4">
                         <div class="col-lg-9">
                             <p class="text-uppercase w-100 text-center letter-spacing"> write a review </p>
