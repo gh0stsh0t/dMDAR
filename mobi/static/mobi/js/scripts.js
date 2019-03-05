@@ -53,6 +53,9 @@ window.onload = function() {
     }, 2000);
 };
 
+$(document).ready(function () {
+    bsCustomFileInput.init()
+})
 
 
 $(function () {

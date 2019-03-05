@@ -150,7 +150,7 @@ Movie Title | {{ movie.title }}
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="col-lg-2 mt-n2 mr-5 ml-n4">
-                                <p class="font-weight-bolder details-review-rating mt-0"> {{ overall }} </p>
+                                <p class="font-weight-bolder details-review-rating mt-0"> {{ overall|floatformat:"1" }} </p>
                             </div>
                         </div>
                         <div class="col-lg-5 mt-5">
@@ -329,7 +329,7 @@ Movie Title | {{ movie.title }}
                             </h5>
                             <div class="row w-100 mt-5 pl-4 pr-4 details-reviews-little">
                                 <ul class="list-unstyled">
-                                    {% for review in reviews %}
+                                    {% for review in top_rev %}
                                         <li class="media mb-5">
                                             <img src="{{ review.reviewer.display_pic.url }} "
                                                 class="details-starring-img mr-5">

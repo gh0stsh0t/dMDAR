@@ -173,10 +173,14 @@ def user(request, username):
 
         filters = dict(title__contains=search, review__rating__range=(min_rating, max_rating), genres__in=genres, isactive=status)
         context['movies'] = m.filter(**filters).order_by(order + sorter)[0:show]
-    if username == request.session['user']:
-        context['editable'] = True
-    else:
-        context['editable'] = False
+    try:
+        if username == request.session['user']:
+            context['editable'] = True
+        else:
+            context['editable'] = False
+    except:
+        pass
+    
     return render(request, 'user.html', context)
 
 
@@ -291,7 +295,7 @@ def post(request):
 
         pass
     if request.method == 'POST':
-        form = MovieModelForm(request.POST)
+        form = MovieModelForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('/')
@@ -299,7 +303,7 @@ def post(request):
             context['form'] = form
             return render(request, 'addmovie.html', context)
     else:
-        context['form'] = MovieModelForm()
+        context['form'] = MovieModelForm(initial={'posted_by': request.session['id']})
         return render(request, 'addmovie.html', context)
 
 
@@ -321,7 +325,7 @@ def edit_post(request, movie_id):
     movie = Movie.objects.get(id=movie_id)
     context['movie'] = movie
     if request.method == 'POST':
-        form = MovieModelForm(request.POST, instance=movie)
+        form = MovieModelForm(request.POST, request.FILES, instance=movie)
         if form.is_valid():
             form.save()
             return redirect('/movie/' + str(movie_id))
@@ -350,10 +354,11 @@ def edit_user(request, username):
         pass
     user = User.objects.get(id=request.session['id'])
     if request.method == 'POST':
-        form = UserModelForm(instance=user)
+        form = UserModelForm(request.POST, request.FILES, instance=user)
+        print(form)
         if form.is_valid():
             form.save()
-            return redirect('/user/')
+            return redirect('/')
         else:
             context['form'] = form
             return render(request, 'editprofile.html', context)
@@ -366,12 +371,13 @@ def signup(request):
     context = {}
 
     if request.method == 'POST':
-        form = UserModelForm(request.POST)
+        form = UserModelForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('/')
         else:
             context['form'] = form
+            print(form.errors)
             return render(request, 'signup.html', context)
     else:
         context['form'] = UserModelForm()

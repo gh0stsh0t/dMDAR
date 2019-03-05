@@ -23,7 +23,7 @@ nav-account-hide
 <div class="row details-content-margin w-100">
     <div class="row w-100 container-margin-top">
         <div id="profile-info" class="media mt-5">
-            <img src="{% if user_logged %} {{ user_pic.url }} {% endif %}"
+            <img src="{{ user.display_pic.url }}"
                 class="align-self-center mr-5 user-profile-img">
             <div class="media-body">
                 <h2 class="mt-2 font-weight-bold text-uppercase letter-spacing">
@@ -307,7 +307,7 @@ nav-account-hide
                                         <option value="32">32</option>
                                         <option value="64">64</option>
                                     </select>
-                                    results
+                                    results 
                                 </div>
                             </div>
 
@@ -317,16 +317,22 @@ nav-account-hide
             </div>
 
             <div class="row mb-5 w-100">
-                <div class="col-lg details-related-col">
-                    <a href="{% url 'mobi:post' %}">
-                        <div class="row mb-0 text-center">
-                            <span class="details-related-add  fa mb-0 mt-4 fa-plus-square"></span>
+                <p> {{ movies }} </p>
+                {% if user_logged %}
+                    {% if user.username == username %}
+                        <div class="col-lg details-related-col">
+                            <a href="{% url 'mobi:post' %}">
+                                <div class="row mb-0 text-center">
+                                    <span class="details-related-add  fa mb-0 mt-4 fa-plus-square"></span>
+                                </div>
+                                <div class="row mt-5 details-related-text">
+                                    <p class="text-uppercase font-weight-light w-100 text-center mb-1"> Add new movie </p>
+                                </div>
+                            </a>
                         </div>
-                        <div class="row mt-5 details-related-text">
-                            <p class="text-uppercase font-weight-light w-100 text-center mb-1"> Add new movie </p>
-                        </div>
-                    </a>
-                </div>
+                    {% endif %}
+                {% endif %}
+                
                 {% for movie in movies %}
                 <div class="col-lg details-related-col">
                     <a href="{% url 'mobi:details' movie.id %}">
