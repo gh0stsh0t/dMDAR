@@ -51,6 +51,7 @@ class User(models.Model):
     usertypes = ((USER, 'User'), (ADMIN, 'Admin'))
     usertype = models.BooleanField(choices=usertypes, default=usertypes[0][0])
     display_pic = models.ImageField(null=True, upload_to='display_pic/')
+    description = models.CharField(max_length=20, null=True, blank=True)
 
     def __str__(self):
         return self.username
@@ -74,6 +75,9 @@ class Actor(models.Model):
 class Cast(models.Model):
     role = models.CharField(max_length=35)
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.actor.lastname + ", " + self.actor.firstname + " - " + self.role
 
 
 class Movie(models.Model):

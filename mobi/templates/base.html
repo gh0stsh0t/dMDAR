@@ -61,10 +61,12 @@
                     </div>
                 </a>
                 <div class="dropdown-menu nav-account-drop" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="user.html">My Movies</a>
-                    <a class="dropdown-item" href="user_movies.html">My Reviews</a>
+                    <a class="dropdown-item" 
+                        href="{% if user_logged %}
+                                {% url 'mobi:user' username %}
+                                {% endif %}">My Profile</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="/logout">Log Out</a>
+                    <a class="dropdown-item" href="{% url 'mobi:logout' %}">Log Out</a>
                 </div>
             </span>
             <span class="nav-item dropdown nav-login-link">
@@ -100,7 +102,7 @@
                         <button type="submit" class="btn btn-primary mt-3" >Sign in</button>
                     </form>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="signup">New around here? Sign up</a>
+                    <a class="dropdown-item" href="{% url 'mobi:signup' %}">New around here? Sign up</a>
                 </div>
             </span>
         </div>
@@ -113,48 +115,7 @@
 
         <div class="row w-100 footer">
             <div class="row w-100 mb-5">
-                <div class="col-lg-4 mb-5">
-                    <div class="row">
-                        <a>
-                            <p class="text-uppercase"> About Moby Review </p>
-                        </a>
-                    </div>
-                    <div class="row">
-                        <a href="home.html">
-                            <p class="text-uppercase"> Home </p>
-                        </a>
-                    </div>
-                    <div class="row">
-                        <a href="{% url 'mobi:catalog' %}">
-                            <p class="text-uppercase"> Catalog </p>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-5">
-                    <div class="row">
-                        <a href="user.html">
-                            <p class="text-uppercase"> User profile </p>
-                        </a>
-                    </div>
-
-                    <div class="row">
-                        <a href="user_movies.html">
-                            <p class="text-uppercase"> My Movies </p>
-                        </a>
-                    </div>
-
-                    <div class="row">
-                        <a href="user.html">
-                            <p class="text-uppercase"> My Reviews </p>
-                        </a>
-                    </div>
-                    <div class="row">
-                        <a>
-                            <p class="text-uppercase"> Add Movie </p>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4">
+                <div class="col-lg">
                     <h1 class="text-center mb-5 "> MOBI Reviews 2019 </h1>
                     <h5 class="text-uppercase font-weight-bold text-center"> Follow Us </h5>
                     <div class="text-center mt-4">
@@ -162,8 +123,8 @@
                             <a href="{{ facebook }}"><span class="fa fa-facebook-f mr-4"></span></a>
                             <a href="{{ twitter }}"><span class="fa fa-twitter mr-4"></span></a>
                             <a href="{{ instagram }}"><span class="fa fa-instagram mr-4"></span></a>
-                            <a><span class="fa fa-snapchat mr-4"></span></a>
-                            <a><span class="fa fa-youtube"></span></a>
+                            <a href="{{ snapchat }}"><span class="fa fa-snapchat mr-4"></span></a>
+                            <a href="{{ youtube }}"><span class="fa fa-youtube"></span></a>
                         </h1>
                     </div>
                 </div>
