@@ -86,18 +86,29 @@ def catalog(request, page=1):
 
 def details(request, movie_id):
     context = {}
+    context['user_logged'] = False
+
+    try:
+
+        context['username'] = request.session['user']
+
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+
+        context['user_logged'] = True
+
+    except:
+
+        pass
     context['movie'] = Movie.objects.annotate(Avg('review__rating')).get(id=movie_id)
     reviews = context['movie'].review_set
     context['overall'] = context['movie'].review__rating__avg
     context['count'] = reviews.count()
     context['breakdown'] = [reviews.filter(rating=rating).count() for rating in range(6)]
     context['reviews'] = reviews.all()
-    actors = []
-    for actor in context['movie'].cast.all():
-        actors += actor.actor
-    context['cast'] = actors
+    context['cast'] = context['movie'].cast.all()
     context['watch'] = context['movie'].watch_set.all()
-    context['trending'] = Movie.objects.filter(special=Movie.TRENDING)
+    context['trending'] = Movie.objects.annotate(Avg('review__rating')).filter(special=Movie.TRENDING)
+    context['top_rev'] = reviews.all().order_by('-review__rating')
     return render(request, 'details.html', context)
 
 
@@ -201,9 +212,6 @@ def logout(request):
         pass
     return redirect('/')
 
-
-def signup(request):
-    context = {}
     return render(request, 'signup.html', context)
 
 
@@ -235,6 +243,19 @@ def review(request, movie_id):
 def edit_review(request, movie_id, review_id):
     # This is placeholder code for ajax review code
     context = {}
+    context['user_logged'] = False
+
+    try:
+
+        context['username'] = request.session['user']
+
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+
+        context['user_logged'] = True
+
+    except:
+
+        pass
     review = Review.objects.get(id=review_id)
     # For checking if logged in, manual user creation huhu
     try:
@@ -256,6 +277,19 @@ def edit_review(request, movie_id, review_id):
 
 def post(request):
     context = {}
+    context['user_logged'] = False
+
+    try:
+
+        context['username'] = request.session['user']
+
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+
+        context['user_logged'] = True
+
+    except:
+
+        pass
     if request.method == 'POST':
         form = MovieModelForm(request.POST)
         if form.is_valid():
@@ -271,6 +305,19 @@ def post(request):
 
 def edit_post(request, movie_id):
     context = {}
+    context['user_logged'] = False
+
+    try:
+
+        context['username'] = request.session['user']
+
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+
+        context['user_logged'] = True
+
+    except:
+
+        pass
     movie = Movie.objects.get(id=movie_id)
     context['movie'] = movie
     if request.method == 'POST':
@@ -286,8 +333,25 @@ def edit_post(request, movie_id):
         return render(request, 'editmovie.html', context)
 
 
+def edit_user(request):
+    context = {}
+    user = User.objects.get(id=request.session['id'])
+    if request.method == 'POST':
+        form = UserModelForm(instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('/user/')
+        else:
+            context['form'] = form
+            return render(request, 'editmovie.html', context)
+    else:
+        context['form'] = UserModelForm(instance=user)
+        return render(request, 'editmovie.html', context)
+
+
 def signup(request):
     context = {}
+
     if request.method == 'POST':
         form = UserModelForm(request.POST)
         if form.is_valid():

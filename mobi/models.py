@@ -51,6 +51,7 @@ class User(models.Model):
     usertypes = ((USER, 'User'), (ADMIN, 'Admin'))
     usertype = models.BooleanField(choices=usertypes, default=usertypes[0][0])
     display_pic = models.ImageField(null=True, upload_to='display_pic/')
+    description = models.CharField(max_length=20, null=True, blank=True)
 
     def __str__(self):
         return self.username
@@ -61,6 +62,7 @@ class Genre(models.Model):
 
     def __str__(self):
         return self.genre
+
 
 class Actor(models.Model):
     firstname = models.CharField(max_length=35)
@@ -102,10 +104,19 @@ class Movie(models.Model):
     time_posted = models.DateTimeField(auto_now_add=True)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     genres = models.ManyToManyField(Genre, blank=True)
-    cast = models.ManyToManyField(Cast, blank=True)
+    cast = models.ManyToManyField(Actor, through=Cast, blank=True)
 
     def __str__(self):
         return self.title
+
+
+class Cast(models.Model):
+    role = models.CharField(max_length=35)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.actor.lastname + ", " + self.actor.firstname + " - " + self.rol
 
 
 class Review(models.Model):
