@@ -23,34 +23,42 @@ window.onload = function() {
             }
         });
     }, 2000);
+
+    var filterTimer;
+    var filterInterval = 500;
     r1.addEventListener('update', (input, value) => {
-        $('first-star-filter').val(value);
-        $('second-star-filter').val(value);
+        if(input.id == "range-2-1")
+            $('#min-star-filter').val(value);
+        else
+            $('#max-star-filter').val(value);
+
+        clearTimeout(filterTimer);
+        filterTimer = setTimeout(filter, filterInterval);
     });
-    const r2 = new JSR(['#range-2-1a', '#range-2-2a'], {
-        sliders: 2,
-        min: 0,
-        max: 5,
-        step: 0.5,
-        values: [0, 5],
-        limit: {
-            show: false
-        },
-        labels: {
-            formatter: (value) => {
-                return value.toString();
-            }
-        }
-    }).setLimit('min', 0).setLimit('max', 5);
-    setTimeout(() => {
-        r2.refresh({
-            min: 0,
-            limit: {
-                min: 0,
-                max: 5
-            }
-        });
-    }, 2000);
+    // const r2 = new JSR(['#range-2-1a', '#range-2-2a'], {
+    //     sliders: 2,
+    //     min: 0,
+    //     max: 5,
+    //     step: 0.5,
+    //     values: [0, 5],
+    //     limit: {
+    //         show: false
+    //     },
+    //     labels: {
+    //         formatter: (value) => {
+    //             return value.toString();
+    //         }
+    //     }
+    // }).setLimit('min', 0).setLimit('max', 5);
+    // setTimeout(() => {
+    //     r2.refresh({
+    //         min: 0,
+    //         limit: {
+    //             min: 0,
+    //             max: 5
+    //         }
+    //     });
+    // }, 2000);
 };
 
 
@@ -308,28 +316,3 @@ $('#login-form').submit(function(e) {
         }
     });
 });
-
-// filter catalogs page
-var filterTimer;
-var filterInterval = 250;
-$('#drop-sort, #drop-num-results').change(function() {
-    console.log("dropdown filter");
-    clearTimeout(filterTimer);
-    filter();
-    filterTimer = setTimeout(filter, filterInterval);
-});
-
-$(document).on('change', '.form-check-input', function() {
-    console.log("test");
-});
-
-function filter() {
-    // $.ajax({
-    //     type: 'POST',
-    //     url: 'catalog',
-    //     data: 
-    //     success: function(data) {
-            
-    //     }
-    // });
-}

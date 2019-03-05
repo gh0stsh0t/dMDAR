@@ -38,8 +38,8 @@ Catalog | Moby Reviews
                             <span class="" id="rating-slider">
                                 <input id="range-2-1" type="range" min="0" max="100" value="30">
                                 <input id="range-2-2" type="range" min="0" max="100" value="30">
-                                <input type="hidden" id="first-star-filter">
-                                <input type="hidden" id="second-star-filter">
+                                <input type="hidden" id="min-star-filter" name="min">
+                                <input type="hidden" id="max-star-filter" name="max">
                             </span>
                         </div>
                     </div>
@@ -52,13 +52,13 @@ Catalog | Moby Reviews
                         <div class="col-sm-6 pt-1">
                             <span class="dropdown">
                                 <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    11 selected
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="genre-count">
+                                    0 selected
                                 </button>
-                                <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+                                <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton" id="results">
                                     {% for genre in genres %}
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="genre-{{ genre.name }}" value="{{ genre.value }}" id="genre-{{ genre.name }}">
+                                            <input class="form-check-input" type="checkbox" name="{{ genre.name }}" value="{{ genre.value }}" id="genre-{{ genre.name }}">
                                             <label class="form-check-label" for="genre-{{ genre.name }}">
                                                 {{ genre.value }}
                                             </label>
@@ -75,10 +75,10 @@ Catalog | Moby Reviews
                             Sort By:
                         </div>
                         <div class="col-sm-6 pt-1">
-                            <select class="btn btn-light " id="drop-sort">
-                                <option value="sort_alpha" selected>Alphabetical</option>
-                                <option value="sort_rating">Highest Rates</option>
-                                <option value="sort_new">Newest</option>
+                            <select class="btn btn-light " id="drop-sort" name="sort">
+                                <option value="az" selected>Alphabetical</option>
+                                <option value="review__rating__avg">Highest Rates</option>
+                                <option value="time_posted">Newest</option>
                             </select>
                             <span>
                                 <input type="hidden" id="sort">
@@ -92,7 +92,7 @@ Catalog | Moby Reviews
                             Show:
                         </div>
                         <div class="col-sm-6 pt-0">
-                            <select class="btn btn-light mr-2" id="drop-num-results">
+                            <select class="btn btn-light mr-2" id="drop-show" name="show">
                                 <option value="16" selected>16</option>
                                 <option value="32">32</option>
                                 <option value="64">64</option>
@@ -110,7 +110,7 @@ Catalog | Moby Reviews
     </div>
 
 
-    <div class="row mb-5 w-100">
+    <div class="row mb-5 w-100" id="catalog-movies">
         {% for movie in movies %}
             <div class="col-lg details-related-col">
                 <a href="{% url 'mobi:details' movie.id %}">
@@ -124,18 +124,6 @@ Catalog | Moby Reviews
                 </a>
             </div>
         {% endfor %}
-        {% comment %} <div class="col-lg details-related-col">
-            <a href="details.html">
-                <div class="row">
-                    <span class="details-related-col-badge">3.5 / 5.0 </span>
-                    <img src="poster.jpg" class="details-related-img">
-                </div>
-                <div class="row mt-3 details-related-text">
-                    <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> Harry Potter and the
-                        Sorcerer's Stone <span class="font-weight-light"> (2017) </span> </p>
-                </div>
-            </a>
-        </div> {% endcomment %}
     </div>
 </div>
 
@@ -146,8 +134,8 @@ Catalog | Moby Reviews
             <li class="page-item disabled">
                 <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
             </li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active"><a class="page-link" href="#">2</a></li>
             <li class="page-item"><a class="page-link" href="#">3</a></li>
             <li class="page-item">
                 <a class="page-link" href="#">Next</a>
@@ -155,5 +143,38 @@ Catalog | Moby Reviews
         </ul>
     </nav>
 </div>
+
+{% block scripts %}
+    <script>
+        // filter catalogs page
+        var filterTimer;
+        var filterInterval = 500;
+        $('#drop-sort, #drop-show').change(function() {
+            clearTimeout(filterTimer);
+            filterTimer = setTimeout(filter, filterInterval);
+        });
+
+        $(document).on('change', 'input[id^="genre"]', function() {
+            clearTimeout(filterTimer);
+            filterTimer = setTimeout(filter, filterInterval);
+            $('#genre-count').html($('input[id^="genre"]').size()+' selected');
+        });
+
+        function filter() {
+            var data_serialized = $('input[id$="star-filter"], input[id^="genre"]:checked, select[id^="drop"]').serialize();
+            console.log(data_serialized);
+            $.ajax({
+                headers: {"X-CSRFToken" : '{{ csrf_token }}'},
+                type: 'POST',
+                url: '{% url "mobi:catalog" %}',
+                data: data_serialized,
+                dataType: 'json',
+                success: function(data) {
+                    $('#catalog-movies').html(data.catalog_template);
+                }
+            })
+        }
+    </script>
+{% endblock %}
 
 {% endblock body %}

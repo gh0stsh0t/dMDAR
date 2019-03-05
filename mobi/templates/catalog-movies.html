@@ -1,0 +1,13 @@
+{% for movie in movies %}
+    <div class="col-lg details-related-col">
+        <a href="{% url 'mobi:details' movie.id %}">
+            <div class="row">
+                <span class="details-related-col-badge">{{ movie.review__rating__avg|floatformat:"1" }} / 5.0 </span>
+                <img src="{{ movie.poster.url }}" class="details-related-img">
+            </div>
+            <div class="row mt-3 details-related-text">
+                <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ movie.title }} <span class="font-weight-light"> ({{ movie.release_date.year }}) </span> </p>
+            </div>
+        </a>
+    </div>
+{% endfor %}
