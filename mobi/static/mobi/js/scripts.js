@@ -311,11 +311,16 @@ $('#login-form').submit(function(e) {
 
 // filter catalogs page
 var filterTimer;
-var filterInterval = 3000;
-$('#drop-sort, #drop-results').change(function() {
+var filterInterval = 250;
+$('#drop-sort, #drop-num-results').change(function() {
+    console.log("dropdown filter");
     clearTimeout(filterTimer);
     filter();
     filterTimer = setTimeout(filter, filterInterval);
+});
+
+$(document).on('change', '.form-check-input', function() {
+    console.log("test");
 });
 
 function filter() {

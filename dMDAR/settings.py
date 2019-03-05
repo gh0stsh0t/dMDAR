@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mobi.apps.MobiConfig',
-    'django_filters',
+    'mathfilters'
 ]
 
 MIDDLEWARE = [

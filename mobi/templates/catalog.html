@@ -58,9 +58,9 @@ Catalog | Moby Reviews
                                 <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
                                     {% for genre in genres %}
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="genre-{{ genre.genre }}">
-                                            <label class="form-check-label" for="genre-{{ genre.genre }}">
-                                                {{ genre.genre }}
+                                            <input class="form-check-input" type="checkbox" name="genre-{{ genre.name }}" value="{{ genre.value }}" id="genre-{{ genre.name }}">
+                                            <label class="form-check-label" for="genre-{{ genre.name }}">
+                                                {{ genre.value }}
                                             </label>
                                         </div>
                                     {% endfor %}

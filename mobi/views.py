@@ -43,7 +43,7 @@ def catalog(request, page=1):
     except:
         pass
 
-    context['genres'] = GenreChoice
+    context['genres'] = list(GenreChoice)
 
     offset = page - 1
     m = Movie.objects.annotate(Count('review'), Avg('review__rating'))
@@ -107,25 +107,25 @@ def user(request, username):
         context['user_logged'] = True
     except:
         pass
-    # u = User.objects.annotate(Count('review', distinct=True), Count('movie', distinct=True))
     # m = Movie.objects.annotate(Avg('review__rating'))
     # context['user'] = u.get(username=username)
     # context['reviews'] = Review.objects.filter(reviewer=request.session['id'])
     # context['movies'] = m
-    context['user'] = User.objects.get(username=username)
-    reviews = Review.objects.get(reviewer=context['user'])
+    user = User.objects.annotate(Count('review', distinct=True), Count('movie', distinct=True))
+    context['user'] = user.get(username=username)
+    reviews = Review.objects
     min_rating = request.GET.get('min', 0)
     max_rating = request.GET.get('max', 5)
     status = request.GET.get('status_r', 'active') == 'active'
-    context['reviews'] = reviews.objects.filter(rating__range=(min_rating, max_rating)).filter(movie__isactive=status)
-
-    movies = Movie.objects.get(posted_by=context['user'])
+    context['reviews'] = reviews.filter(rating__range=(min_rating, max_rating)).filter(movie__isactive=status).filter(reviewer=context['user'])
+    print(context['reviews'])
+    movies = Movie.objects.filter(posted_by=context['user'])
     status = request.GET.get('status_m', 'active') == 'active'
 
     # Hello, code below should be replaced with the ajax function of catalog
 
     context['genres'] = GenreChoice
-    m = movies.objects.annotate(Count('review'), Avg('review__rating'))
+    m = movies.annotate(Count('review'), Avg('review__rating'))
     if request.method == 'POST':
         sorter = request.POST.get('sort', '')
         order = request.POST.get('order', '-')
@@ -143,6 +143,7 @@ def user(request, username):
                 genres += request.POST[genre.name]
             except KeyError:
                 pass
+        print(genres)
 
         if sorter == 'az':
             sorter = 'title'
