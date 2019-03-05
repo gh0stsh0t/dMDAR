@@ -6,7 +6,7 @@ Moby Reviews | Edit Profile
 
 {% block nav-type %}nav-bar{% endblock nav-type %}
 
-{% block custom-nav %}nav-login-hide{% endblock custom-nav %}
+{% block custom-nav %}nav-login-hide nav-account-hide{% endblock custom-nav %}
 
 {% block home-active %}active-tab{% endblock home-active %}
 
@@ -16,9 +16,9 @@ Moby Reviews | Edit Profile
 
 {% block body %}
 <div class="row details-content-margin">
-    {% if username == username %}
+    {% if form.username.value == username %}
     <div class="row w-100 container-margin-top">
-            <form class="w-100" action="{% url 'mobi:edit_post' form.instance.id %}" method="POST">
+            <form class="w-100" action="{% url 'mobi:edit_user' form.instance.id %}" method="POST">
                     {% csrf_token %}
 
                     <div class="row mt-5 mb-3">
@@ -28,7 +28,7 @@ Moby Reviews | Edit Profile
                     {{ form|crispy }}
                     
                     <input type="submit" class="btn btn-primary" value="Update">
-                    <a href="{% url 'mobi:details' form.instance.id %}">
+                    <a href="{% url 'mobi:user' username %}">
                             <button type="button" class="btn btn-outline-danger"> Cancel</button>
                     </a>
             </form>

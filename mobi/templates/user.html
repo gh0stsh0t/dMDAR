@@ -30,12 +30,12 @@ nav-account-hide
                     {{ user.username }}
                     {% if user_logged %}
                         {% if user.username == username %}
-                        <a href="editprofile.html"><span
+                        <a href="{% url 'mobi:edit_user' user.username %}"><span
                                 class="fa fa-edit button-inactive ml-2 edit-profile-btn"></span></a>
                         {% endif %}
                     {% endif %}
                 </h2>
-                New York Times
+                {{ user.description }}
             </div>
         </div>
     </div>
@@ -127,7 +127,9 @@ nav-account-hide
                             <th scope="col" style="width: 20%">Rating</th>
                             <th scope="col" style="width: 20%">Title | Year</th>
                             <th scope="col" style="width: 50%">Review</th>
+                            {% if user.username == username %}
                             <th scope="col" style="width: 10%"></th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -150,10 +152,12 @@ nav-account-hide
                             </th>
                             <td>{{ review.movie }} ({{ review.movie.release_date.year }})</td>
                             <td> {{ review.comment }} </td>
+                            {% if user.username == username %}
                             <td class="user-reviews-actions">
-                                <span class="fa fa-edit button-inactive mt-3 mr-4" onclick="showEditReview(0)"></span>
+                                <span class="fa fa-edit button-inactive mr-4" onclick="showEditReview(0)"></span>
                                 <span class="fa fa-trash button-inactive mr-2" onclick="archiveReview(0)"></span>
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -314,7 +318,7 @@ nav-account-hide
 
             <div class="row mb-5 w-100">
                 <div class="col-lg details-related-col">
-                    <a href="addmovie.html">
+                    <a href="{% url 'mobi:post' %}">
                         <div class="row mb-0 text-center">
                             <span class="details-related-add  fa mb-0 mt-4 fa-plus-square"></span>
                         </div>

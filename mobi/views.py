@@ -108,7 +108,7 @@ def details(request, movie_id):
     context['cast'] = context['movie'].cast.all()
     context['watch'] = context['movie'].watch_set.all()
     context['trending'] = Movie.objects.annotate(Avg('review__rating')).filter(special=Movie.TRENDING)
-    context['top_rev'] = reviews.all().order_by('-review__rating')
+    context['top_rev'] = reviews.all().order_by('-rating')
     return render(request, 'details.html', context)
 
 
@@ -333,8 +333,21 @@ def edit_post(request, movie_id):
         return render(request, 'editmovie.html', context)
 
 
-def edit_user(request):
+def edit_user(request, username):
     context = {}
+    context['user_logged'] = False
+
+    try:
+
+        context['username'] = request.session['user']
+
+        context['user_pic'] = User.objects.get(username=context['username']).display_pic
+
+        context['user_logged'] = True
+
+    except:
+
+        pass
     user = User.objects.get(id=request.session['id'])
     if request.method == 'POST':
         form = UserModelForm(instance=user)
@@ -343,10 +356,10 @@ def edit_user(request):
             return redirect('/user/')
         else:
             context['form'] = form
-            return render(request, 'editmovie.html', context)
+            return render(request, 'editprofile.html', context)
     else:
         context['form'] = UserModelForm(instance=user)
-        return render(request, 'editmovie.html', context)
+        return render(request, 'editprofile.html', context)
 
 
 def signup(request):
