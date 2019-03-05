@@ -75,6 +75,9 @@ class Cast(models.Model):
     role = models.CharField(max_length=35)
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.actor.lastname + ", " + self.actor.firstname + " - " + self.rol
+
 
 class Movie(models.Model):
     title = models.CharField(max_length=200)
