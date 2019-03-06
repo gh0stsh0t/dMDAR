@@ -144,10 +144,11 @@ Catalog | Moby Reviews
         $(document).ready(function() {
             $('#check-all').prop("checked", true);
             $('#check-all').trigger('change');
+            var pagination = $('.pagination').html();
         });
 
         // pagination
-        var currentpage = 1, firstpage = 1, lastpage = 3, num_pages = 3;
+        var currentpage = 1, firstpage = 1, num_pages = 3, total_pages = Math.ceil({{ movies|length }}/parseInt($('#drop-show').val())), lastpage = total_pages;
         $('.page-num').click(function() {
             $('.page-num').each(function() {
                 $(this).removeClass("active");
@@ -155,9 +156,44 @@ Catalog | Moby Reviews
             $(this).addClass("active");
         });
 
+        function resetPages() {
+            currentpage = 1;
+            firstpage = 1;
+            lastpage = total_pages;
+            num_pages = 3;
+            $('.page-num').show();
+            loadPages();
+        }
+
+        function loadPages() {
+            /*
+            console.log("current page", currentpage);
+            console.log("drop-show val", parseInt($('#drop-show').val()));
+            total_pages = Math.ceil({{ movies|length }}/parseInt($('#drop-show').val()));
+            $('#next').parent().removeClass("disabled");
+            if(total_pages<=num_pages) {
+                console.log("test");
+                $('.page-num').hide();
+                if(total_pages == 1) {
+                    $('#prev, #next').parent().addClass("disabled");
+                    $('.page-num').eq(0).show();
+                }
+                else {
+                    $('#prev').parent().addClass("disabled");
+                    for(var i=0; i<total_pages; i++) {
+                        console.log("update load pages");
+                        $('.page-num').eq(i).show();
+                        $('.page-num').eq(i).find('.page-link').html(i+1);
+                    }
+                }
+            }*/
+            updatePaginationDisplay(currentpage, "forward");
+        }
+
         $('#prev, #next').click(function() {
             console.log("check fl pages", firstpage, lastpage);
             if(this.id == "prev") {
+                console.log("prev");
                 currentpage -= 1
                 $('.page-num').each(function(e) {
                     if($(this).hasClass('active')) {
@@ -167,7 +203,7 @@ Catalog | Moby Reviews
                             console.log("balik last");
                             pages = updatePaginationDisplay(currentpage, "backward");
                             firstpage = pages[0]
-                            lastpage = pages[pages.length - 1]
+                            // lastpage = pages[pages.length - 1]
                             console.log("pages", pages);
                             for(var i = 0; i < pages.length; i++) {
                                 console.log("page", pages[i]);
@@ -199,22 +235,23 @@ Catalog | Moby Reviews
                 });
             }
             else {
+                console.log("next");
                 currentpage += 1
                 $('.page-num').each(function(e) {
                     if($(this).hasClass('active')) {
                         $(this).removeClass('active');
-                        if(currentpage > lastpage) {
+                        if(currentpage%(num_pages + 1) == 0) {
                             $('.page-num').show();
                             console.log("balik first");
                             pages = updatePaginationDisplay(currentpage, "forward");
                             firstpage = pages[0]
-                            lastpage = pages[pages.length - 1]
+                            // lastpage = pages[pages.length - 1]
                             $('.page-num').hide();
                             for(var i = 0; i < pages.length; i++) {
                                 $('.page-num').eq(i).show();
                                 $('.page-num').eq(i).find('.page-link').html(pages[i]);
                             }
-                            if(currentpage == lastpage && lastpage == {{ movies|length }}) {
+                            if(currentpage == lastpage) {
                                 $('#prev').parent().removeClass("disabled");
                                 $('#next').parent().addClass("disabled");
                             }
@@ -222,11 +259,13 @@ Catalog | Moby Reviews
                             console.log("forward ", firstpage, lastpage);
                         }
                         else {
+                            console.log("cp lp", currentpage, lastpage);
                             if(currentpage < lastpage) {
                                 $('#prev').parent().removeClass("disabled");
                                 $('#next').parent().removeClass("disabled");
                             }
-                            else if (currentpage == lastpage && lastpage == {{ movies|length }}) {
+                            else if (currentpage == lastpage) {
+                                console.log("next2")
                                 $('#prev').parent().removeClass("disabled");
                                 $('#next').parent().addClass("disabled");
                             }
@@ -235,7 +274,7 @@ Catalog | Moby Reviews
                     }
                 });
             }
-            console.log(currentpage);
+            console.log("pn currentpage", currentpage);
             pageAjax(currentpage);
         });
 
@@ -340,10 +379,15 @@ Catalog | Moby Reviews
                 url: '{% url "mobi:catalog" %}',
                 data: data_serialized,
                 dataType: 'json',
-                success: function(data) {
-                    $('#catalog-movies').html(data.catalog_template);
-                }
+                success: loadFilter
             });
+        }
+
+        function loadFilter(data) {
+            console.log("load filter");
+            $('#catalog-movies').html(data.catalog_template);
+            //resetPages();
+            //loadPages();
         }
     </script>
 {% endblock %}
