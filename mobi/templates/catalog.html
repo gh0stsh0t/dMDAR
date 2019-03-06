@@ -99,13 +99,14 @@ Catalog | Moby Reviews
                         </div>
                         <div class="col-sm-6 pt-0">
                             <select class="btn btn-light mr-2" id="drop-show" name="show">
-                                <option value="16" selected>16</option>
+                                <option value="1" selected>1</option>
+                                <option value="16">16</option>
                                 <option value="32">32</option>
                                 <option value="64">64</option>
                             </select>
                             results
                             <span>
-                                <input type="hidden" id="num-results">
+                                <input type="hidden" id="current-page" name="current-page" value="1">
                             </span>
                         </div>
                     </div>
@@ -125,13 +126,13 @@ Catalog | Moby Reviews
     <nav class="w-100">
         <ul class="pagination justify-content-center">
             <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                <a class="page-link" id="prev" tabindex="-1" aria-disabled="true">Previous</a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item page-num active"><a class="page-link">1</a></li>
+            <li class="page-item page-num"><a class="page-link">2</a></li>
+            <li class="page-item page-num"><a class="page-link">3</a></li>
             <li class="page-item">
-                <a class="page-link" href="#">Next</a>
+                <a class="page-link" id="next">Next</a>
             </li>
         </ul>
     </nav>
@@ -139,6 +140,210 @@ Catalog | Moby Reviews
 
 {% block scripts %}
     <script>
+        // on ready default processes
+        $(document).ready(function() {
+            $('#check-all').prop("checked", true);
+            $('#check-all').trigger('change');
+            var pagination = $('.pagination').html();
+        });
+
+        // pagination
+        var currentpage = 1, firstpage = 1, num_pages = 3, total_pages = Math.ceil({{ movies|length }}/parseInt($('#drop-show').val())), lastpage = total_pages;
+        $('.page-num').click(function() {
+            $('.page-num').each(function() {
+                $(this).removeClass("active");
+            });
+            $(this).addClass("active");
+        });
+
+        function resetPages() {
+            currentpage = 1;
+            firstpage = 1;
+            lastpage = total_pages;
+            num_pages = 3;
+            $('.page-num').show();
+            loadPages();
+        }
+
+        function loadPages() {
+            /*
+            console.log("current page", currentpage);
+            console.log("drop-show val", parseInt($('#drop-show').val()));
+            total_pages = Math.ceil({{ movies|length }}/parseInt($('#drop-show').val()));
+            $('#next').parent().removeClass("disabled");
+            if(total_pages<=num_pages) {
+                console.log("test");
+                $('.page-num').hide();
+                if(total_pages == 1) {
+                    $('#prev, #next').parent().addClass("disabled");
+                    $('.page-num').eq(0).show();
+                }
+                else {
+                    $('#prev').parent().addClass("disabled");
+                    for(var i=0; i<total_pages; i++) {
+                        console.log("update load pages");
+                        $('.page-num').eq(i).show();
+                        $('.page-num').eq(i).find('.page-link').html(i+1);
+                    }
+                }
+            }*/
+            updatePaginationDisplay(currentpage, "forward");
+        }
+
+        $('#prev, #next').click(function() {
+            console.log("check fl pages", firstpage, lastpage);
+            if(this.id == "prev") {
+                console.log("prev");
+                currentpage -= 1
+                $('.page-num').each(function(e) {
+                    if($(this).hasClass('active')) {
+                        $(this).removeClass('active');
+                        if(currentpage < firstpage && currentpage%(num_pages+1) == num_pages) {
+                            $('.page-num').show();
+                            console.log("balik last");
+                            pages = updatePaginationDisplay(currentpage, "backward");
+                            firstpage = pages[0]
+                            // lastpage = pages[pages.length - 1]
+                            console.log("pages", pages);
+                            for(var i = 0; i < pages.length; i++) {
+                                console.log("page", pages[i]);
+                                $('.page-num').eq(i).find('.page-link').html(pages[i]);
+                            }
+                            
+                            if (currentpage == firstpage && firstpage == 1) {
+                                $('#prev').parent().addClass("disabled");
+                                $('#next').parent().removeClass("disabled");
+                            }
+                            else if(currentpage <= lastpage) {
+                                $('#prev').parent().removeClass("disabled");
+                                $('#next').parent().removeClass("disabled");
+                            }
+                            $('.page-num').eq(num_pages-1).addClass("active");
+                        }
+                        else {
+                            if (currentpage == firstpage && firstpage == 1) {
+                                $('#prev').parent().addClass("disabled");
+                                $('#next').parent().removeClass("disabled");
+                            }
+                            else if(currentpage <= lastpage) {
+                                $('#prev').parent().removeClass("disabled");
+                                $('#next').parent().removeClass("disabled");
+                            }
+                            $('.page-num').eq((currentpage%(num_pages+1))-1).addClass("active");
+                        }
+                    }
+                });
+            }
+            else {
+                console.log("next");
+                currentpage += 1
+                $('.page-num').each(function(e) {
+                    if($(this).hasClass('active')) {
+                        $(this).removeClass('active');
+                        if(currentpage%(num_pages + 1) == 0) {
+                            $('.page-num').show();
+                            console.log("balik first");
+                            pages = updatePaginationDisplay(currentpage, "forward");
+                            firstpage = pages[0]
+                            // lastpage = pages[pages.length - 1]
+                            $('.page-num').hide();
+                            for(var i = 0; i < pages.length; i++) {
+                                $('.page-num').eq(i).show();
+                                $('.page-num').eq(i).find('.page-link').html(pages[i]);
+                            }
+                            if(currentpage == lastpage) {
+                                $('#prev').parent().removeClass("disabled");
+                                $('#next').parent().addClass("disabled");
+                            }
+                            $('.page-num').eq(0).addClass("active");
+                            console.log("forward ", firstpage, lastpage);
+                        }
+                        else {
+                            console.log("cp lp", currentpage, lastpage);
+                            if(currentpage < lastpage) {
+                                $('#prev').parent().removeClass("disabled");
+                                $('#next').parent().removeClass("disabled");
+                            }
+                            else if (currentpage == lastpage) {
+                                console.log("next2")
+                                $('#prev').parent().removeClass("disabled");
+                                $('#next').parent().addClass("disabled");
+                            }
+                            $('.page-num').eq((currentpage%(num_pages+1))-1).addClass("active");
+                        }
+                    }
+                });
+            }
+            console.log("pn currentpage", currentpage);
+            pageAjax(currentpage);
+        });
+
+        function updatePaginationDisplay(pagenum, state) {
+            var display_pages = new Array();
+            var display_num_pages;
+            if(state=="forward") {
+                console.log("forward");
+                display_num_pages = pagenum%(num_pages+1);
+                for(var i=1; i<=(display_num_pages == 0 ? 1 : display_num_pages); i++) {
+                    console.log(pagenum-1+i)
+                    display_pages.push(pagenum-1+i);
+                }
+            }
+            else if(state == "backward") {
+                display_num_pages = pagenum%(num_pages+1);
+                console.log("backward", display_num_pages, pagenum);
+                for(var i=(display_num_pages == 0 ? 1 : display_num_pages); i>=1; i--) {
+                    console.log(pagenum+1-i)
+                    display_pages.push(pagenum+1-i);
+                }
+            }
+            return display_pages;
+        }
+
+        $('.page-num').click(function() {
+            currentpage = $(this).index();
+            if(currentpage == 1) {
+                /*
+                $('#prev').prop("aria-disabled", true);
+                $('#prev').attr("tabindex", -1);
+                $('#next').prop("aria-disabled", false);
+                $('#next').removeAttr("tabindex");
+                */
+                $('#prev').parent().addClass("disabled");
+                $('#next').parent().removeClass("disabled");
+                console.log("0");
+            }
+            else if(currentpage == {{ movies|length }}) {
+                /*
+                $('#prev').prop("aria-disabled", false);
+                $('#prev').removeAttr("tabindex");
+                $('#next').prop("aria-disabled", true);
+                $('#next').attr("tabindex", -1);
+                */
+                $('#prev').parent().removeClass("disabled");
+                $('#next').parent().addClass("disabled");
+                console.log("1");
+            }
+            else {
+                /*
+                $('#prev').prop("aria-disabled", false);
+                $('#prev').removeAttr("tabindex");
+                $('#next').prop("aria-disabled", false);
+                $('#next').removeAttr("tabindex");
+                */
+                $('#prev').parent().removeClass("disabled");
+                $('#next').parent().removeClass("disabled");
+                console.log("else");
+            }
+            pageAjax(currentpage);
+        })
+
+        function pageAjax(pagenum) {
+            $('#current-page').val(pagenum);
+            console.log(pagenum);
+            filter();
+        }
+
         // filter catalogs page
         var filterTimer;
         var filterInterval = 500;
@@ -166,18 +371,23 @@ Catalog | Moby Reviews
         });
 
         function filter() {
-            var data_serialized = $('input[id$="star-filter"], input[id^="genre"]:checked, select[id^="drop"]').serialize();
-            console.log(data_serialized);
+            var data_serialized = $('input[id$="star-filter"], input[id^="genre"]:checked, select[id^="drop"], input#current-page').serialize();
+            // console.log(data_serialized);
             $.ajax({
                 headers: {"X-CSRFToken" : '{{ csrf_token }}'},
                 type: 'POST',
                 url: '{% url "mobi:catalog" %}',
                 data: data_serialized,
                 dataType: 'json',
-                success: function(data) {
-                    $('#catalog-movies').html(data.catalog_template);
-                }
-            })
+                success: loadFilter
+            });
+        }
+
+        function loadFilter(data) {
+            console.log("load filter");
+            $('#catalog-movies').html(data.catalog_template);
+            //resetPages();
+            //loadPages();
         }
     </script>
 {% endblock %}
