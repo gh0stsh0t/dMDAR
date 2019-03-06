@@ -35,13 +35,38 @@
                 <li class="nav-item text-uppercase letter-spacing mr-5 {% block catalog-active %} {% endblock catalog-active %}"><a href="{% url 'mobi:catalog' %}">catalog</a>
                 </li>
             </ul>
+ <div class="search_section">
+      <!--
+         The form is submitted on every key press ("keyup") to the ajax
+         function. If the number of characters is greater than
+         MIN_SEARCH_CHARS, then it is submitted to the Django view. Django
+         then renders the sub-template
 
-            <span class="text-uppercase letter-spacing nav-search-icon text-white">
+         color_search_results__html_snippet.txt
+
+         whose output is fed back to the ajax function. Ajax then populates
+         the rendered sub-template into the below div.
+
+         This no longer needs to be a form since the JavaScript directly
+         reads both fields (that is, it attaches event listeners to them,
+         which automatically react to key-presses). To be clearer, I've
+         added "color_" to the beginning of the text field's id.
+
+         Notes:
+            - csrf_token-s are not required in get requests.
+            - Only because the view expects a GET request, the search may
+            be directly tested with
+               http://my.website/color_liker/search?color_search_text=bl
+      -->
+     <span class="text-uppercase letter-spacing nav-search-icon text-white">
                 <span id="openSearch" class="fa fa-search"></span>
             </span>
-            <form class="nav-search text-uppercase letter-spacing mr-5 mt-3">
-                <input type="text" class="form-control" id="search" placeholder="Search">
-            </form>
+     <form class="nav-search text-uppercase letter-spacing mr-5 mt-3">
+         <input type="text" class="form-control" id="movie_search_text" name="search_text"/>
+         <!-- <input type="text" class="form-control" id="search" placeholder="Search"> -->
+     </form>
+      <div id="movie_search_results"></div>
+   </div>
             <span class="nav-item dropdown nav-profile-link">
                 <a class="p-0 nav-link nav-profile" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
@@ -144,6 +169,12 @@
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="{% static 'mobi/js/slider.js' %}"></script>
     <script type="text/javascript" src="{% static 'mobi/js/scripts.js' %}"></script>
+    <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+   <script language="javascript">
+      var SUBMIT_URL = "{% url 'mobi:movie_list' %}";
+    </script>
+    <script type='text/javascript' src="{% static 'mobi/js/movie_ajax_search.js' %}"></script>
+    <script type='text/javascript' src="{% static 'mobi/js/main_search.js' %}"></script>
     {% block scripts %}
     {% endblock %}
 </body>

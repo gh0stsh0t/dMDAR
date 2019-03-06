@@ -63,6 +63,7 @@ class Genre(models.Model):
     def __str__(self):
         return self.genre
 
+
 class Actor(models.Model):
     firstname = models.CharField(max_length=35)
     lastname = models.CharField(max_length=35)
@@ -71,6 +72,7 @@ class Actor(models.Model):
 
     def __str__(self):
         return "{}, {}".format(self.lastname, self.firstname)
+    
 
 class Cast(models.Model):
     role = models.CharField(max_length=35)

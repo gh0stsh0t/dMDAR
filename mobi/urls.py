@@ -14,4 +14,5 @@ urlpatterns = [
     path('movie/<int:movie_id>/review', views.review, name='review'),
     path('movie', views.post, name='post'),
     path('movie/<int:movie_id>/update', views.edit_post, name='edit_post'),
+    path('search', views.submit_movie_search_from_ajax, name='movie_list'),
 ]
