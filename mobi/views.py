@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect, render_to_response
+from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.template.response import TemplateResponse
 from .models import Movie, Review, Genre, Actor, Watch, User, GenreChoice
 from .forms import UserModelForm, MovieModelForm, ReviewModelForm
 from datetime import datetime
 from operator import itemgetter
 from django.db.models import Avg, Func, Count
-import logging
+from django.core import serializers
+from django.forms.models import model_to_dict
 
 
 # Create your views here.
@@ -48,7 +51,7 @@ def catalog(request, page=1):
 
     offset = page - 1
     m = Movie.objects.annotate(Count('review'), Avg('review__rating'))
-    if request.method == 'POST':
+    if request.method == 'POST' and request.is_ajax():
         sorter = request.POST.get('sort', '')
         order = request.POST.get('order', '-')
         search = request.POST.get('search', '')
@@ -63,23 +66,30 @@ def catalog(request, page=1):
         #                    <input type="text" name="{{genre.name}}" value="{{genre.value}}"/>
         for genre in GenreChoice:
             try:
-                genres += request.POST[genre.name]
+                genres.append(request.POST[genre.name])
             except KeyError:
                 pass
 
         if sorter == 'az':
             sorter = 'title'
+            order = ''
         elif sorter == 'release':
             sorter = 'release_date'
         elif sorter == 'score':
             sorter = 'review__rating__avg'
         elif sorter == 'reviews':
             sorter = 'review__count'
-        else:
-            sorter = 'time_posted'
 
-        filters = dict(title__contains=search, review__rating__range=(min_rating, max_rating), genres__in=genres)
+        wanted_genre = Genre.objects.filter(genre__in=genres).values('genre')
+        #sa genres__in to na part
+        filters = dict(title__contains=search, review__rating__avg__range=(min_rating, max_rating), genres__genre__in=wanted_genre)
         context['movies'] = m.filter(**filters).order_by(order + sorter)[0 + offset:show + offset]
+        print(sorter, order, search, min_rating, max_rating, offset, show)
+        # print(context['movies'][0:2].title)
+        # return JsonResponse(serializers.serialize('json', context['movies']), safe=False)
+        catalog_template = render_to_string('catalog-movies.html', context, request)
+        return JsonResponse({'catalog_template':catalog_template}, safe=False)
+        # return render(request, 'catalog.html', context)
     else:
         context['movies'] = m.all().order_by('-time_posted')[0 + offset:16 + offset]
     return render(request, 'catalog.html', context)
@@ -123,61 +133,66 @@ def user(request, username):
         context['user_logged'] = True
     except:
         pass
-    # m = Movie.objects.annotate(Avg('review__rating'))
-    # context['user'] = u.get(username=username)
-    # context['reviews'] = Review.objects.filter(reviewer=request.session['id'])
-    # context['movies'] = m
-    user = User.objects.annotate(Count('review', distinct=True), Count('movie', distinct=True))
-    context['user'] = user.get(username=username)
-    reviews = Review.objects
-    min_rating = request.GET.get('min', 0)
-    max_rating = request.GET.get('max', 5)
-    status = request.GET.get('status_r', 'active') == 'active'
-    context['reviews'] = reviews.filter(rating__range=(min_rating, max_rating)).filter(movie__isactive=status).filter(reviewer=context['user'])
-    print(context['reviews'])
-    movies = Movie.objects.filter(posted_by=context['user'])
-    status = request.GET.get('status_m', 'active') == 'active'
-
-    # Hello, code below should be replaced with the ajax function of catalog
-
-    context['genres'] = GenreChoice
-    m = movies.annotate(Count('review'), Avg('review__rating'))
-    if request.method == 'POST':
-        sorter = request.POST.get('sort', '')
-        order = request.POST.get('order', '-')
-        search = request.POST.get('search', '')
-        min_rating = float(request.POST.get('min', 0))
-        max_rating = float(request.POST.get('max', 5))
-        show = int(request.POST.get('show', 0))
-
-        genres = []
-        # For rendering the list of genres please use the genres context
-        # example usage: for genre in GenreChoice:
-        #                    <input type="text" name="{{genre.name}}" value="{{genre.value}}"/>
-        for genre in GenreChoice:
-            try:
-                genres += request.POST[genre.name]
-            except KeyError:
-                pass
-        print(genres)
-
-        if sorter == 'az':
-            sorter = 'title'
-        elif sorter == 'release':
-            sorter = 'release_date'
-        elif sorter == 'score':
-            sorter = 'review__rating__avg'
-        elif sorter == 'reviews':
-            sorter = 'review__count'
-        else:
-            sorter = 'time_posted'
-
-        filters = dict(title__contains=search, review__rating__range=(min_rating, max_rating), genres__in=genres, isactive=status)
-        context['movies'] = m.filter(**filters).order_by(order + sorter)[0:show]
-    if username == request.session['user']:
-        context['editable'] = True
+    
+    if username != context['username']:
+        return redirect('/user/'+context['username'])
     else:
-        context['editable'] = False
+        # m = Movie.objects.annotate(Avg('review__rating'))
+        # context['user'] = u.get(username=username)
+        # context['reviews'] = Review.objects.filter(reviewer=request.session['id'])
+        # context['movies'] = m
+        user = User.objects.annotate(Count('review', distinct=True), Count('movie', distinct=True))
+        context['user'] = user.get(username=username)
+        reviews = Review.objects
+        min_rating = request.GET.get('min', 0)
+        max_rating = request.GET.get('max', 5)
+        status = request.GET.get('status_r', 'active') == 'active'
+        context['reviews'] = reviews.filter(rating__range=(min_rating, max_rating)).filter(movie__isactive=status).filter(reviewer=context['user'])
+        print(context['reviews'])
+        movies = Movie.objects.filter(posted_by=context['user'])
+        status = request.GET.get('status_m', 'active') == 'active'
+
+        # Hello, code below should be replaced with the ajax function of catalog
+
+        context['genres'] = GenreChoice
+        m = movies.annotate(Count('review'), Avg('review__rating'))
+        if request.method == 'POST':
+            sorter = request.POST.get('sort', '')
+            order = request.POST.get('order', '-')
+            search = request.POST.get('search', '')
+            min_rating = float(request.POST.get('min', 0))
+            max_rating = float(request.POST.get('max', 5))
+            show = int(request.POST.get('show', 0))
+
+            genres = []
+            # For rendering the list of genres please use the genres context
+            # example usage: for genre in GenreChoice:
+            #                    <input type="text" name="{{genre.name}}" value="{{genre.value}}"/>
+            for genre in GenreChoice:
+                try:
+                    genres += request.POST[genre.name]
+                except KeyError:
+                    pass
+            print(genres)
+
+            if sorter == 'az':
+                sorter = 'title'
+            elif sorter == 'release':
+                sorter = 'release_date'
+            elif sorter == 'score':
+                sorter = 'review__rating__avg'
+            elif sorter == 'reviews':
+                sorter = 'review__count'
+            else:
+                sorter = 'time_posted'
+
+            filters = dict(title__contains=search, review__rating__range=(min_rating, max_rating), genres__in=genres, isactive=status)
+            context['movies'] = m.filter(**filters).order_by(order + sorter)[0:show]
+        if username == request.session['user']:
+            context['editable'] = True
+        else:
+            context['editable'] = False
+        return render(request, 'user.html', context)
     return render(request, 'user.html', context)
 
 
