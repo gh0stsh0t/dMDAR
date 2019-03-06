@@ -49,7 +49,12 @@ def catalog(request, page=1):
 
     context['genres'] = list(GenreChoice)
 
+    try:
+        page = int(request.POST['current-page'])
+    except:
+        pass
     offset = page - 1
+    print(page, offset)
     m = Movie.objects.annotate(Count('review'), Avg('review__rating'))
     if request.method == 'POST' and request.is_ajax():
         sorter = request.POST.get('sort', '')
