@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .models import Movie, Review, Genre, Actor, Watch, User, GenreChoice
 from .forms import UserModelForm, MovieModelForm, ReviewModelForm
 from datetime import datetime
 from operator import itemgetter
 from django.db.models import Avg, Func, Count
+import logging
 
 
 # Create your views here.
@@ -108,7 +109,7 @@ def details(request, movie_id):
     context['cast'] = context['movie'].cast.all()
     context['watch'] = context['movie'].watch_set.all()
     context['trending'] = Movie.objects.annotate(Avg('review__rating')).filter(special=Movie.TRENDING)
-    context['top_rev'] = reviews.all().order_by('-review__rating')
+    context['top_rev'] = reviews.all().order_by('-rating')
     return render(request, 'details.html', context)
 
 
@@ -337,16 +338,20 @@ def edit_user(request):
     context = {}
     user = User.objects.get(id=request.session['id'])
     if request.method == 'POST':
-        form = UserModelForm(instance=user)
+        form = UserModelForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('/user/')
+            m = User.objects.get(id=request.session['id'])
+            request.session['user'] = m.username
+            request.session['type'] = m.usertype
+
+            return redirect('/user/'+m.username)
         else:
             context['form'] = form
-            return render(request, 'editmovie.html', context)
+            return render(request, 'edituser.html', context)
     else:
         context['form'] = UserModelForm(instance=user)
-        return render(request, 'editmovie.html', context)
+        return render(request, 'edituser.html', context)
 
 
 def signup(request):
@@ -363,3 +368,21 @@ def signup(request):
     else:
         context['form'] = UserModelForm()
         return render(request, 'signup.html', context)
+
+def submit_movie_search_from_ajax(request):
+    movies = []  # Assume no results.
+    search_text = ""  # Assume no search
+    if request.method == "GET":
+        search_text = request.GET.get("movie_search_text", "").strip().lower()
+        if len(search_text) < 2:
+            search_text = ""
+    movie_results = []
+    if search_text != "":
+        movie_results = Movie.objects.filter(title__icontains=search_text)
+    context = {
+        "search_text": search_text,
+        "movie_search_results": movie_results,
+    }
+
+    return render_to_response("search/movie_search_results.txt",
+                              context)

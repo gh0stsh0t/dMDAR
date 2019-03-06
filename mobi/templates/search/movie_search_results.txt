@@ -1,0 +1,22 @@
+{% if  search_text|length >= 2 %}
+   <p><b>Searching for &quot;<code>{{ search_text }}</code>&quot;:</b>
+   {% if  movie_search_results.count > 0 %}
+      </p>
+         {% for  movie in movie_search_results %}
+            <div class="row">
+            <--! change as needed lg po -->
+                <a href="{% url 'mobi:details' movie.id %}">
+                    <div class="row">
+                        <span class="details-related-col-badge">{{ movie.review__rating__avg|floatformat:"1" }} / 5.0 </span>
+                        <img src="{{ movie.poster.url }}" class="details-related-img">
+                    </div>
+                    <div class="row mt-3 details-related-text">
+                        <p class="text-uppercase font-weight-bold w-100 text-center mb-1"> {{ movie.title }} <span class="font-weight-light"> ({{ movie.release_date.year }}) </span> </p>
+                    </div>
+                </a>
+            </div>
+         {% endfor %}
+   {% else %}
+      <i>No results</i></p>
+   {% endif %}
+{% endif %}
