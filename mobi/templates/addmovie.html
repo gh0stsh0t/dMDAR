@@ -30,9 +30,18 @@ nav-account-hide
             <div class="row w-100 mt-2 text-center ">
                     <p class="font-weight-bold center-text"> Fill up all the details below </p>
                     </div>
-        <form class="w-100 mt-5" action="{% url 'mobi:post' %}" method="POST" enctype="multipart/form-data">
+            <form class="w-100" action="{% url 'mobi:post' %}" method="POST"
+                    enctype="multipart/form-data">
             {% csrf_token %}
-                {% crispy form %}
+            <div class="col-lg-5">
+                
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+
+            </div>
+                
+            {{ form|crispy }}
             <input type="submit" class="btn btn-primary w-100 mt-5 mb-5 p-3" value="Add">
         </form>
     </div>
@@ -44,7 +53,3 @@ nav-account-hide
 </div>
 </div>
 {% endblock body %}
-
-{% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
-{% endblock %}

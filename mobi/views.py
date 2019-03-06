@@ -300,21 +300,18 @@ def post(request):
     context['user_logged'] = False
 
     try:
-
         context['username'] = request.session['user']
-
         context['user_pic'] = User.objects.get(username=context['username']).display_pic
-
         context['user_logged'] = True
-
     except:
-
         pass
+
     if request.method == 'POST':
         movie = MovieModelForm(request.POST, request.FILES)
         watches = formset_factory(WatchModelForm(request.POST))
 
         if movie.is_valid():
+            movie.cleaned_data['id_posted_by'] = User.objects.get(username=context['username']).id
             saved_movie = movie.save()
             if watches.is_valid():
                 for watch in watches:
@@ -326,7 +323,7 @@ def post(request):
             context['form_watches'] = watches
             return render(request, 'addmovie.html', context)
     else:
-        context['form_movie'] = MovieModelForm(initial={'posted_by': request.session['id']})
+        context['form_movie'] = MovieModelForm(initial={'posted_by': User.objects.get(username=context['username']).id})
         context['form_watches'] = formset_factory(WatchModelForm())
         return render(request, 'addmovie.html', context)
 
@@ -336,20 +333,17 @@ def edit_post(request, movie_id):
     context['user_logged'] = False
 
     try:
-
         context['username'] = request.session['user']
-
         context['user_pic'] = User.objects.get(username=context['username']).display_pic
-
         context['user_logged'] = True
-
     except:
-
         pass
+
     movie = Movie.objects.get(id=movie_id)
     existing_watch = Watch.objects.filter(movie=movie).values()
     watchesFormset = formset_factory(WatchModelForm)
     context['movie'] = movie
+
     if request.method == 'POST':
         movie = MovieModelForm(request.POST, request.FILES, instance=movie)
         watches = watchesFormset(request.POST, initial=existing_watch)
@@ -388,7 +382,6 @@ def edit_user(request, username):
     user = User.objects.get(id=request.session['id'])
     if request.method == 'POST':
         form = UserModelForm(request.POST, request.FILES, instance=user)
-        print(form)
         if form.is_valid():
             form.save()
             m = User.objects.get(id=request.session['id'])
