@@ -1,5 +1,7 @@
 from django.forms import ModelForm
 from .models import User, Movie, Review
+from django.forms.widgets import HiddenInput
+from django import forms
 
 
 class UserModelForm(ModelForm):
@@ -11,7 +13,8 @@ class UserModelForm(ModelForm):
 class MovieModelForm(ModelForm):
     class Meta:
         model = Movie
-        exclude = ['id', 'isactive', 'special', 'time_posted', 'posted_by']
+        exclude = ['id', 'isactive', 'special', 'time_posted']
+        widgets = {'posted_by': forms.HiddenInput()}
 
 
 class ReviewModelForm(ModelForm):
