@@ -7,11 +7,11 @@ Moby Reviews | Add New Movie
 {% block nav-type %}nav-bar-normal{% endblock nav-type %}
 
 {% block custom-nav %}
-    {% if user_logged %} 
-        nav-login-hide
-    {% else %}
-        nav-account-hide
-    {% endif %}
+{% if user_logged %}
+nav-login-hide
+{% else %}
+nav-account-hide
+{% endif %}
 {% endblock custom-nav %}
 
 {% block home-active %}{% endblock home-active %}
@@ -24,19 +24,16 @@ Moby Reviews | Add New Movie
 <div class="row details-content-margin">
     {% if user_logged %}
     <div class="row w-100 container-margin-top">
-        <form class="w-100" action="{% url 'mobi:post' %}" method="POST">
-            {% csrf_token %}
-
-            <div class="row mt-5 mb-3">
-                <h2 class="mt-5 font-weight-light">Add New Movie </h2>
+            <div class="row w-100 mt-5 text-center ">
+                    <h2 class="mt-5 font-weight-light center-text"> Add New Movie </h2>
             </div>
-
-            {{ form|crispy }}
-
-            <input type="submit" class="btn btn-primary" value="Add">
-            <a href="{% url 'mobi:index' %}">
-                <button type="button" class="btn btn-outline-danger"> Cancel</button>
-            </a>
+            <div class="row w-100 mt-2 text-center ">
+                    <p class="font-weight-bold center-text"> Fill up all the details below </p>
+                    </div>
+        <form class="w-100 mt-5" action="{% url 'mobi:post' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+                {% crispy form %}
+            <input type="submit" class="btn btn-primary w-100 mt-5 mb-5 p-3" value="Add">
         </form>
     </div>
     {% else %}
@@ -47,3 +44,7 @@ Moby Reviews | Add New Movie
 </div>
 </div>
 {% endblock body %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+{% endblock %}
