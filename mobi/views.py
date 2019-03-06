@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, render_to_response
 from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template.response import TemplateResponse
+from django.forms import formset_factory
 from .models import Movie, Review, Genre, Actor, Watch, User, GenreChoice
-from .forms import UserModelForm, MovieModelForm, ReviewModelForm
+from .forms import UserModelForm, MovieModelForm, ReviewModelForm, WatchModelForm
 from datetime import datetime
 from operator import itemgetter
 from django.db.models import Avg, Func, Count
@@ -82,7 +83,7 @@ def catalog(request, page=1):
 
         wanted_genre = Genre.objects.filter(genre__in=genres).values('genre')
         #sa genres__in to na part
-        filters = dict(title__contains=search, review__rating__avg__range=(min_rating, max_rating), genres__genre__in=wanted_genre)
+        filters = dict(title__contains=search, review__rating__avg__range=(min_rating, max_rating), genres__genre__in=wanted_genre, isactive=True)
         context['movies'] = m.filter(**filters).order_by(order + sorter)[0 + offset:show + offset]
         print(sorter, order, search, min_rating, max_rating, offset, show)
         # print(context['movies'][0:2].title)
@@ -310,15 +311,23 @@ def post(request):
 
         pass
     if request.method == 'POST':
-        form = MovieModelForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
+        movie = MovieModelForm(request.POST, request.FILES)
+        watches = formset_factory(WatchModelForm(request.POST))
+
+        if movie.is_valid():
+            saved_movie = movie.save()
+            if watches.is_valid():
+                for watch in watches:
+                    temp = watch.save()
+                    temp.movie = saved_movie
             return redirect('/')
         else:
-            context['form'] = form
+            context['form_movie'] = movie
+            context['form_watches'] = watches
             return render(request, 'addmovie.html', context)
     else:
-        context['form'] = MovieModelForm(initial={'posted_by': request.session['id']})
+        context['form_movie'] = MovieModelForm(initial={'posted_by': request.session['id']})
+        context['form_watches'] = formset_factory(WatchModelForm())
         return render(request, 'addmovie.html', context)
 
 
@@ -338,17 +347,26 @@ def edit_post(request, movie_id):
 
         pass
     movie = Movie.objects.get(id=movie_id)
+    existing_watch = Watch.objects.filter(movie=movie).values()
+    watchesFormset = formset_factory(WatchModelForm)
     context['movie'] = movie
     if request.method == 'POST':
-        form = MovieModelForm(request.POST, request.FILES, instance=movie)
-        if form.is_valid():
-            form.save()
-            return redirect('/movie/' + str(movie_id))
+        movie = MovieModelForm(request.POST, request.FILES, instance=movie)
+        watches = watchesFormset(request.POST, initial=existing_watch)
+        if movie.is_valid():
+            saved_movie = movie.save()
+            if watches.is_valid():
+                for watch in watches:
+                    temp = watch.save()
+                    temp.movie = saved_movie
+            return redirect('/movie/'+str(movie_id))
         else:
-            context['form'] = form
+            context['form_movie'] = movie
+            context['form_watches'] = watches
             return render(request, 'editmovie.html', context)
     else:
-        context['form'] = MovieModelForm(instance=movie)
+        context['form_movie'] = MovieModelForm(instance=movie)
+        context['form_watches'] = watchesFormset(initial=existing_watch)
         return render(request, 'editmovie.html', context)
 
 
@@ -417,5 +435,5 @@ def submit_movie_search_from_ajax(request):
         "movie_search_results": movie_results,
     }
 
-    return render_to_response("search/movie_search_results.txt",
+    return render_to_response("search/movie_search_results.html",
                               context)
