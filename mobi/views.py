@@ -299,26 +299,23 @@ def post(request):
     context['user_logged'] = False
 
     try:
-
         context['username'] = request.session['user']
-
         context['user_pic'] = User.objects.get(username=context['username']).display_pic
-
         context['user_logged'] = True
-
     except:
-
         pass
+
     if request.method == 'POST':
         form = MovieModelForm(request.POST, request.FILES)
         if form.is_valid():
+            form.cleaned_data['id_posted_by'] = User.objects.get(username=context['username']).id
             form.save()
             return redirect('/')
         else:
             context['form'] = form
             return render(request, 'addmovie.html', context)
     else:
-        context['form'] = MovieModelForm(initial={'posted_by': request.session['id']})
+        context['form'] = MovieModelForm(initial={'posted_by': User.objects.get(username=context['username']).id})
         return render(request, 'addmovie.html', context)
 
 
@@ -327,18 +324,15 @@ def edit_post(request, movie_id):
     context['user_logged'] = False
 
     try:
-
         context['username'] = request.session['user']
-
         context['user_pic'] = User.objects.get(username=context['username']).display_pic
-
         context['user_logged'] = True
-
     except:
-
         pass
+
     movie = Movie.objects.get(id=movie_id)
     context['movie'] = movie
+
     if request.method == 'POST':
         form = MovieModelForm(request.POST, request.FILES, instance=movie)
         if form.is_valid():
@@ -370,7 +364,6 @@ def edit_user(request, username):
     user = User.objects.get(id=request.session['id'])
     if request.method == 'POST':
         form = UserModelForm(request.POST, request.FILES, instance=user)
-        print(form)
         if form.is_valid():
             form.save()
             m = User.objects.get(id=request.session['id'])

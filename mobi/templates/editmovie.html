@@ -33,9 +33,9 @@ Moby Reviews | Edit Movie
                     <form class="w-100 mt-5" action="{% url 'mobi:edit_post' form.instance.id %}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
 
-                                {% crispy form %}
+                        {{ form|crispy }}
                         
-                        <input type="submit" class="btn btn-primary w-100 mt-5 mb-5 p-3" value="Add">
+                        <input type="submit" class="btn btn-primary w-100 mt-5 mb-5 p-3" value="Update">
                     </form>
                 </div>
         {% else %}
